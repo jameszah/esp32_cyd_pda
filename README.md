@@ -6,7 +6,7 @@ PDA is Personal Digital Assistant. Small handheld computer. Like smartphone with
 ![CYD PDA Screenshots](Collage.png)
 
 # Details
-* No additional hardware required. All you need is CYD
+* No additional hardware required. All you need is CYD (tested with ESP32-2432S028R)
 * But if you have a speaker it can beep on events.
 * It uses internal flash for files storage. FFat as filesystem. You can do backups from FFat to SD.
 * Or you can use SD as storage. SD if preferred.
