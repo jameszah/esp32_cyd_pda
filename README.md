@@ -277,6 +277,7 @@ File operations:
 * cd [directory] - change directory
 * pwd - chow current directory
 * ls [directory] - list files in current directory
+* du {directory} - calculate directory or file size
 * mkdir {directory} - create directory
 * rmdir {directory} - remove directory
 * cp {from_path} {to_path} - copy files recursively
