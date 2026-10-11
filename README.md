@@ -362,6 +362,7 @@ app command possible arguments: calculator, files, notes, contacts, todo, schedu
 You can modify code if you want. Bug reports and pull requests appreciated.
 
 # Links
+* Feedback, suggestions: https://t.me/sau412 or sau@arikado.xyz
 * Web Flasher: https://sau412.github.io/esp32_cyd_pda/flash
 * Video presentation (old): https://www.youtube.com/watch?v=mXp3R2wKOIw
 * Telegram group: https://t.me/arikado_chat_ru/9896
