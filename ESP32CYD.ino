@@ -231,6 +231,8 @@
   цветные значки в лаунчере
 2026-10-10 Исправлен значок 2048, значок info переделан, расписание выбран текущий день, переименование в utf8 в pim-приложениях, du
 
+- Цветные значки
+- Заставка дефрагментация
 - Кнопка в random useless facts
 - Дата и время в указанном формате (12-24)
 - новый обзор(ы)
@@ -239,12 +241,20 @@
 - терминал ввод поддержка передвижения курсора
 - Уникальные строки в файле
 - Сортировка файла
-- Показывать размер файлов в ls (или ещё как)
 - dd if=zero/random/file of=file bs count skip
+- du в справку
+- Меню для просмотра: найти, найти далее
+- Меню файлов: смена кодировки, хэш мд5, хэш сша256
+- Меню редактирования: сохранить, найти, найти далее, заменить
+- Меню ханойских башен: следующий уровень, предыдущий уровень (или просто выбор)
+- Меню н назад, арифметики, проичих игр: изменить уровень, рестарт (вообще необязательно)
+- drawTextFormatted положение определённого байта
+- drawTextFormatted блок выделения или курсор в указанном месте
+- drawTextFormatted ближайший байт для касания
+
 
 Улучшения тут и там б - баг, д - доработка, н - необязательное, и - исследование, п - периодическое, т - тестирование:
 - Режим без хранилища - использовать NVS, одна заметка, один пароль, одна таблица
-- Цветные значки
 - (д) Сообщение с точкой для разблокировки
 - (п) Просмотреть справку, может быть что-то добавить
 - (н) Мини-калькулятор в меню
@@ -402,6 +412,7 @@
 - ticks ввод времени
 - beats ввод времени
 - drawTextBar где необходимо
+- Показывать размер файлов в ls (или ещё как)
 
 Буфер обмена
 - (д) Буфер обмена
@@ -1765,6 +1776,7 @@ void user_manual(char mode, char *io_buff) {
   "\n"
   "== Tips & Tricks ==\n"
   "* Touch and hold app title more than 1 second to exit app.\n"
+  "* Touch right top corner for system menu\n"
   "* Press BOOT button to make screenshot.\n"
   "* To force perform calibration on start hold touchscreen during reboot\n"
   "* For screensavers touch and hold anywhere to exit\n"
@@ -1868,18 +1880,18 @@ void user_manual(char mode, char *io_buff) {
     16, 16,
       0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 
       0xF0, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x0F, 
-      0xF0, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0x0F, 
-      0xF0, 0xFF, 0xF0, 0x00, 0x00, 0x0F, 0xFF, 0x0F, 
-      0xF0, 0xFF, 0x00, 0x00, 0x00, 0x00, 0xFF, 0x0F, 
-      0xF0, 0xF0, 0x00, 0xFF, 0xFF, 0x00, 0x0F, 0x0F, 
-      0xF0, 0xF0, 0x0F, 0xFF, 0xFF, 0x00, 0x0F, 0x0F, 
-      0xF0, 0xFF, 0xFF, 0xFF, 0xF0, 0x00, 0xFF, 0x0F, 
-      0xF0, 0xFF, 0xFF, 0xFF, 0x00, 0x0F, 0xFF, 0x0F, 
-      0xF0, 0xFF, 0xFF, 0xF0, 0x00, 0xFF, 0xFF, 0x0F, 
-      0xF0, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0x0F, 
-      0xF0, 0xFF, 0xFF, 0xF0, 0x0F, 0xFF, 0xFF, 0x0F, 
-      0xF0, 0xFF, 0xFF, 0xF0, 0x0F, 0xFF, 0xFF, 0x0F, 
-      0xF0, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0x0F, 
+      0xF0, 0x11, 0x11, 0x11, 0x11, 0x11, 0x11, 0x0F, 
+      0xF0, 0x11, 0x1B, 0xBB, 0xBB, 0xB1, 0x11, 0x0F, 
+      0xF0, 0x11, 0xBB, 0xBB, 0xBB, 0xBB, 0x11, 0x0F, 
+      0xF0, 0x1B, 0xBB, 0x11, 0x11, 0xBB, 0xB1, 0x0F, 
+      0xF0, 0x1B, 0xB1, 0x11, 0x11, 0xBB, 0xB1, 0x0F, 
+      0xF0, 0x11, 0x11, 0x11, 0x1B, 0xBB, 0x11, 0x0F, 
+      0xF0, 0x11, 0x11, 0x11, 0xBB, 0xB1, 0x11, 0x0F, 
+      0xF0, 0x11, 0x11, 0x1B, 0xBB, 0x11, 0x11, 0x0F, 
+      0xF0, 0x11, 0x11, 0x11, 0x11, 0x11, 0x11, 0x0F, 
+      0xF0, 0x11, 0x11, 0x1B, 0xB1, 0x11, 0x11, 0x0F, 
+      0xF0, 0x11, 0x11, 0x1B, 0xB1, 0x11, 0x11, 0x0F, 
+      0xF0, 0x11, 0x11, 0x11, 0x11, 0x11, 0x11, 0x0F, 
       0xF0, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x0F, 
       0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 
   };
@@ -2023,6 +2035,7 @@ const char global_terminal_help[] PROGMEM =
   "cd [directory] - change directory\n"
   "pwd - chow current directory\n"
   "ls [directory] - list files in current directory\n"
+  "du {directory} - calculate file or directory size\n"
   "mkdir {directory} - create directory\n"
   "rmdir {directory} - remove directory\n"
   "cp {from_path} {to_path} - copy files recursively\n"
@@ -5353,7 +5366,7 @@ void terminal_print_char(char c) {
   if(terminal_esc_sequence_flag) {
     terminal_esc_sequence[strlen(terminal_esc_sequence) + 1] = 0;
     terminal_esc_sequence[strlen(terminal_esc_sequence)] = c;
-    Serial.println(terminal_esc_sequence);
+    //Serial.println(terminal_esc_sequence);
     // ESC ]0; - смена заголовка окна
     if(terminal_esc_sequence[0] == ']') {
       if(strcmp(terminal_esc_sequence, "]0;") == 0) {
