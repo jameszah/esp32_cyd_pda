@@ -230,160 +230,138 @@
 2026-10-09 Терминал сдвиг курсора при вводе через границу экрана, ESC ]0; для смены заголовка (пропустить),
   цветные значки в лаунчере
 2026-10-10 Исправлен значок 2048, значок info переделан, расписание выбран текущий день, переименование в utf8 в pim-приложениях, du
+2026-10-11 du в справку, Дефрагментация диска (заставка), L system правый край за экраном
+2026-10-12 Не показывать время до синхронизации или до установки пользователем, поддержка 12-часового формата везде, настройка 12/24,
+  кнопка обновления случайного факта, доработка справки, автосохранение при правке, deg, degrad, deggrad, raddeg, radgrad, gradrad, graddeg,
+  recpol, polrec
 
 - Цветные значки
-- Заставка дефрагментация
-- Кнопка в random useless facts
-- Дата и время в указанном формате (12-24)
 - новый обзор(ы)
-- циклическое переключение дашбордов
-- последние приложения приложением
-- терминал ввод поддержка передвижения курсора
-- Уникальные строки в файле
-- Сортировка файла
-- dd if=zero/random/file of=file bs count skip
-- du в справку
-- Меню для просмотра: найти, найти далее
-- Меню файлов: смена кодировки, хэш мд5, хэш сша256
-- Меню редактирования: сохранить, найти, найти далее, заменить
-- Меню ханойских башен: следующий уровень, предыдущий уровень (или просто выбор)
-- Меню н назад, арифметики, проичих игр: изменить уровень, рестарт (вообще необязательно)
-- drawTextFormatted положение определённого байта
-- drawTextFormatted блок выделения или курсор в указанном месте
-- drawTextFormatted ближайший байт для касания
-
 
 Улучшения тут и там б - баг, д - доработка, н - необязательное, и - исследование, п - периодическое, т - тестирование:
 - Режим без хранилища - использовать NVS, одна заметка, один пароль, одна таблица
-- (д) Сообщение с точкой для разблокировки
-- (п) Просмотреть справку, может быть что-то добавить
-- (н) Мини-калькулятор в меню
-- (н) Конвертер валют, единиц измерения
-- (н) /Terminal/Aliases (а что это должно делать?)
-- (н) passwd - установка и сброс пароля
-- (н) Генератор сигналов в фоне
-- (н) Таймер в фоне
-- (н) Дашборд валюты
-- (н) Дашборд акции - финансовые данные https://www.valueray.com/api/v1/symbolData?symbol=AAPL
-- (н) Дашборд криптовалюты
-- (н) Дашборд фотографии
-- (н) Дашборд орбиты и положение планет
-- (н) Дашборд знаки зодиака
+- Сообщение с точкой для разблокировки
+- Просмотреть справку, может быть что-то добавить
+- Мини-калькулятор в меню
+- Конвертер валют, единиц измерения
+- /Terminal/Aliases (а что это должно делать?)
+- passwd - установка и сброс пароля
+- Генератор сигналов в фоне
+- Таймер в фоне
+- Дашборд валюты
+- Дашборд акции - финансовые данные https://www.valueray.com/api/v1/symbolData?symbol=AAPL
+- Дашборд криптовалюты
+- Дашборд фотографии
+- Дашборд орбиты и положение планет
+- Дашборд знаки зодиака
 - Дашборд ZPG - можно idlerpg: персонаж качается, встречает монстров, находит/теряет предметы; а можно как годвиль; ИИ предлагает целый город
-- (н) Flightradar https://api.adsb.lol/docs
-- (н) Настройка: не показывать значки статуса AFMSWT
-- (н) Настройка: не показывать время
-- (н) Настройка: не показывать время пока оно не синхронизировано
-- (н) Bluetooth музыка и радио - похоже не хватает на это памяти
-- (н) Шахматы (задачи)
-- (н) Шахматы (игра с компьютером)
-- (н) Бегающий динозавр (как в Chrome)
-- (н) Арканоид
-- (н) Судоку
-- (н) Четыре в ряд
-- (н) Крестики-нолики
-- (н) Морской бой
-- (н) Бомбер
-- (н) Гонки
-- (н) Линии (lines)
-- (н) Пасьянс косынка
-- (н) Лабиринт
-- (н) Светофор
-- (н) Косынка
-- (н) Marbles (правда это сложно)
-- (д) Тренажёр шахматных координат
-- (д) Тетрис - настройки Figures (Tetranimo, Pentamino), Speed (Slow, Medium, Fast, Max), Increase on (Figure, Time, Line, None), Next figure (Random, No repeat), Filled lines (0 - 10), Scroll, Colors (on/off)
-- (д) Tetris - зонтичное приложение для игр Brick Game
-- (н) Убирать значки в лаунчере
-- (н) Соединение через HTTP прокси
-- (н) Вебсервер в фоне
-- (н) Чат в фоне
-- (н) IRC в фоне
-- (н) Переделать мп3-плеер в сторону мп3, а не просто пим (мп3 не выдаёт прерываний)
-- (н) Автояркость - нужно определять вход резистора
-- (н) Определять инверсию экрана
-- (н) Автосохранение файла при редактировании в отдельную папку
-- (н) Значок приложения в заголовке (а что когда нет значка?)
-- (н) Возможность выбрать звук для событий
-- (н) ssh - Debug exception reason: BREAK instr
-- (н) Гофер браузер - специальная домашняя страница для CYD с объяснениями
-- (н) Гофер браузер - менять домашнюю страницу
-- (н) Триггерные кнопки (не ясно как использовать) или чекбоксы
-- (н) Выбирать SD или FFat для каждого приложения отдельно
-- (н) Прокрутка терминала
-- (н) Не отжимать кнопку если увод касания меньше 100 мс
-- (н) Использовать NVS для настроек, привязанных к устройству - инверсия, калибровка, предпочитаемое хранилище
-- (н) Другое погодное апи или выбор из нескольких
-- (н) В файлах слушать музыку
-- (н) Заставка двойной маятник (сложно)
-- (н) Многозадачность в консоли через FreeRTOS
-- (н) Обновление по OTA
-- (н) CHIP-8 ускорение работы вывода спрайта
-- (н) CHIP-8 рисовать только изменённые части экрана
-- (н) Управление через веб
-- (н) I2C чтение распространённых датчиков
-- (н) Basic рисование: plot, draw, rect, fillrect, triangle, fillscreen, drawString, drawCentreString, drawCircle, fillCircle
-- (н) Basic строки
-- (н) Basic работа с файлами
-- (н) Полноцветные скриншоты (24 бита) если нужно
-- (н) tftp
-- (д) Совет от ИИ - экран История/продолжить - чем занимался в каких приложениях, как задачи
-- (д) Терминал переменные окружения
-- (д) /Terminal/Environment
-- (н) Чат - просмотр с прокруткой
-- (н) Категории для PIM
-- (н) Заставка Boids
-- (н) Заставка DLA
-- (н) Rainbow lamp
-- (н) Заставка снег
-- (н) Заставка огонь
-- (н) Заставка гравитация
-- (н) Заставка бегущая строка
-- (н) Заставка точки вверх-вниз как в 3д-кубе
-- (н) Заставка множество мандельброта, Жюлиа
-- (н) Заставка бассейны Ньютона
-- (н) Спирограф
-- (н) Летающие квадратики (как в Song in lines)
-- (н) Четырёхмерный куб
-- (н) Папоротник Барнсли
-- (н) Тонкий клиент - отправка касаний на сервер, получение текста/картинки с сервера
-- (н) Удалённое управление - отправка картинки на сервер, получение касания с сервера
-- (н) Облачная фоторамка - картинка с сервера
-- (н) Таблица менделеева
-- (н) Приливы-отливы
-- (н) Конвертер валют и единиц
-- (н) Общение с ИИ
-- (н) Майнер
-- (н) Serial to web - управление RS-232 с веб-интерфейса
-- (н) Просмотр mjpeg с esp32cam
-- (н) Дней с начала года
-- (н) Дней до конца года
-- (н) Номер недели
-- (н) Терминал операции со строками ESC-кодами
-- (н) tar
-- (н) xmodem отправка
-- (н) xmodem приём
-- (н) Можно заменить millis на esp_timer_get_time, чтобы не было переполнения времени
-- (н) Quick launch лаунчер
-- (д) Ланучер-список
-- (д) Лаунчер с более крупными значками
-- (д) Выбор вида лаунчера
-- (д) Ещё один заход Bluetooth
-- (д) Прошлые команды в терминале по стрелке вверх
-- (н) Почта
-- (н) Gemini
-- (н) Finger
-- (н) Простой HTTP
-- (н) Настройки пинов: подсветка, светодиод, звук, музыка, кнопка BOOT
+- Flightradar https://api.adsb.lol/docs
+- Настройка: не показывать значки статуса AFMSWT
+- Настройка: не показывать время
+- Настройка: не показывать время пока оно не синхронизировано
+- Bluetooth музыка и радио - похоже не хватает на это памяти
+- Шахматы (задачи)
+- Шахматы (игра с компьютером)
+- Шахматы тренировка координат
+- Бегающий динозавр (как в Chrome)
+- Арканоид
+- Судоку
+- Четыре в ряд
+- Крестики-нолики
+- Морской бой
+- Бомбер
+- Гонки
+- Линии (lines)
+- Пасьянс косынка
+- Лабиринт
+- Светофор
+- Косынка
+- Marbles (правда это сложно)
+- Тетрис - настройки Figures (Tetranimo, Pentamino), Speed (Slow, Medium, Fast, Max), Increase on (Figure, Time, Line, None), Next figure (Random, No repeat), Filled lines (0 - 10), Scroll, Colors (on/off)
+- Tetris - зонтичное приложение для игр Brick Game
+- Убирать значки в лаунчере
+- Соединение через HTTP прокси
+- Вебсервер в фоне
+- Чат в фоне
+- IRC в фоне
+- Переделать мп3-плеер в сторону мп3, а не просто пим (мп3 не выдаёт прерываний)
+- Автояркость - нужно определять вход резистора
+- Определять инверсию экрана
+- Значок приложения в заголовке (а что когда нет значка?)
+- Возможность выбрать звук для событий
+- ssh - Debug exception reason: BREAK instr
+- Гофер браузер - специальная домашняя страница для CYD с объяснениями
+- Гофер браузер - менять домашнюю страницу
+- Триггерные кнопки (не ясно как использовать) или чекбоксы
+- Выбирать SD или FFat для каждого приложения отдельно
+- Прокрутка терминала
+- Не отжимать кнопку если увод касания меньше 100 мс
+- Использовать NVS для настроек, привязанных к устройству - инверсия, калибровка, предпочитаемое хранилище
+- Другое погодное апи или выбор из нескольких
+- В файлах слушать музыку
+- Заставка двойной маятник (сложно)
+- Многозадачность в консоли через FreeRTOS
+- Обновление по OTA
+- CHIP-8 ускорение работы вывода спрайта
+- CHIP-8 рисовать только изменённые части экрана
+- Управление через веб
+- I2C чтение распространённых датчиков
+- Basic рисование: plot, draw, rect, fillrect, triangle, fillscreen, drawString, drawCentreString, drawCircle, fillCircle
+- Basic строки
+- Basic работа с файлами
+- Полноцветные скриншоты (24 бита) если нужно
+- tftp
+- Совет от ИИ - экран История/продолжить - чем занимался в каких приложениях, как задачи
+- Терминал переменные окружения
+- /Terminal/Environment
+- Чат - просмотр с прокруткой
+- Категории для PIM
+- Заставка Boids
+- Заставка DLA
+- Rainbow lamp
+- Заставка снег
+- Заставка огонь
+- Заставка гравитация
+- Заставка бегущая строка
+- Заставка точки вверх-вниз как в 3д-кубе
+- Заставка множество мандельброта, Жюлиа
+- Заставка бассейны Ньютона
+- Спирограф
+- Летающие квадратики (как в Song in lines)
+- Четырёхмерный куб
+- Папоротник Барнсли
+- Тонкий клиент - отправка касаний на сервер, получение текста/картинки с сервера
+- Удалённое управление - отправка картинки на сервер, получение касания с сервера
+- Облачная фоторамка - картинка с сервера
+- Таблица менделеева
+- Приливы-отливы
+- Конвертер валют и единиц
+- Общение с ИИ
+- Майнер
+- Serial to web - управление RS-232 с веб-интерфейса
+- Просмотр mjpeg с esp32cam
+- Дней с начала года
+- Дней до конца года
+- Номер недели
+- Терминал операции со строками ESC-кодами
+- tar
+- xmodem отправка
+- xmodem приём
+- Можно заменить millis на esp_timer_get_time, чтобы не было переполнения времени
+- Quick launch лаунчер
+- Ланучер-список
+- Лаунчер с более крупными значками
+- Выбор вида лаунчера
+- Ещё один заход Bluetooth
+- Прошлые команды в терминале по стрелке вверх
+- Почта
+- Gemini
+- Finger
+- Простой HTTP браузер
+- Настройки пинов: подсветка, светодиод, звук, музыка, кнопка BOOT
 - urlencode
 - port - получить порт по названию или название по порту
 - Физические преобразования (градусы, длина, площадь, объём)
-- raddeg
-- radgrad
-- degrad
-- deggrad
-- graddec
-- gradrad
 - deg - преобразование градусов в дробь и обратно
 - rgb2hex()
 - hex2rgb()
@@ -395,11 +373,10 @@
 - hsl2rgb()
 - colorname2rgb()
 - rgb2colorname()
-- декартовы, полярные, сферическое координаты
 - Гамма-функция
 - ЕАН контрольная цифра
 - Карта контрольная цифра
-- Добавление файлов PIM
+- Добавление файлов PIM через терминал
 - Географическое расстояние между точками
 - Протокол CAN
 - Простокол Modbus
@@ -413,21 +390,35 @@
 - beats ввод времени
 - drawTextBar где необходимо
 - Показывать размер файлов в ls (или ещё как)
+- Меню для просмотра: найти, найти далее
+- Меню файлов: смена кодировки, хэш мд5, хэш сша256
+- Меню редактирования: сохранить, найти, найти далее, заменить
+- Меню ханойских башен: следующий уровень, предыдущий уровень (или просто выбор)
+- Меню н назад, арифметики, проичих игр: изменить уровень, рестарт (вообще необязательно)
+- циклическое переключение дашбордов
+- последние приложения приложением
+- терминал ввод поддержка передвижения курсора
+- Уникальные строки в файле
+- Сортировка файла
+- dd if=zero/random/file of=file bs count skip
+- drawTextFormatted положение определённого байта
+- drawTextFormatted блок выделения или курсор в указанном месте
+- drawTextFormatted ближайший байт для касания
 
 Буфер обмена
-- (д) Буфер обмена
-- (д) Выделение в просмотре, копирование
-- (д) Выделение в редактировании, копирование, вставка
-- (д) Выделение в prompt, копирование, вставка
-- (д) Автоопределение кодировки файла при просмотре
-- (д) Не прокручивать при редактировании дальше конца файла
-- (д) Prompt - возможность переставлять курсор
-- (д) Prompt - возможность выделять
+- Буфер обмена
+- Выделение в просмотре, копирование
+- Выделение в редактировании, копирование, вставка
+- Выделение в prompt, копирование, вставка
+- Автоопределение кодировки файла при просмотре
+- Не прокручивать при редактировании дальше конца файла
+- Prompt - возможность переставлять курсор
+- Prompt - возможность выделять
 Сторонние библиотеки:
-- (д) QR-код
-- (д) Datamatrix
-- (н) Распаковка zip
-- (н) Распаковка gz
+- QR-код
+- Datamatrix
+- Распаковка zip
+- Распаковка gz
 
 
 */
@@ -1019,6 +1010,8 @@ int global_seconds = 0;
 int global_moon_day = 0;
 int global_day_of_week = 0;
 char global_is_lap_year = 0;
+char global_is_time_set = 0;
+char global_is_12h_time = 1;
 
 Ticker secondTicker;
 Ticker minuteTicker;
@@ -1323,7 +1316,7 @@ void launcher(char mode, char *io_buff) {
           app_name[4] = 0;
           tft.setTextColor(app_fg, app_bg);
           tft.drawCentreString(app_name, col * tft.width() / 8 + 15, 4 + 16 + 16 + row * 32, FONT_MONOSPACE);
-          image16_from_bytes(7 + col * tft.width() / 8, 4 + 16 + row * 32, app_icon);
+          icon16_from_bytes(7 + col * tft.width() / 8, 4 + 16 + row * 32, app_icon);
         }
       }
       if(row * 8 + col + 1 >= apps_max) break;
@@ -1636,7 +1629,7 @@ void system_info(char mode, char *io_buff) {
 
     i = 0;
     tft.setTextColor(color_scheme_fg, color_scheme_bg);
-    sprintf(buff, "ESP32 CYD PDA v1.7 by sau412");
+    sprintf(buff, "ESP32 CYD PDA v1.8 by sau412");
     tft.drawString(buff, 2, 16 + i * 16, FONT_DEFAULT);
     i++;
 
@@ -1790,7 +1783,7 @@ void user_manual(char mode, char *io_buff) {
   "Touch left side of the screen to scroll back, right side to scroll forward.\n"
   "\n"
   "== Contacts ==\n"
-  "First line of the file is name, second is contact info."
+  "First line of the file is name, second is contact info.\n"
   "\n"
   "== RSS ==\n"
   "First line of the file is name, second is RSS URL. HTTP and HTTPS are supported.\n"
@@ -1849,6 +1842,7 @@ void user_manual(char mode, char *io_buff) {
   "/Settings/Autorun - autorun settings\n"
   "/Settings/Alarm - alarm settings\n"
   "/Settings/Gamma - gamma correction settings\n"
+  "/Settings/Formats - date format\n"
   "/Notes - notes folder\n"
   "/Images - draw folder\n"
   "/Expenses - expenses folder\n"
@@ -1989,6 +1983,15 @@ const char global_terminal_help[] PROGMEM =
   "hexbin {hexadecimal} - hexadecimal to binary\n"
   "hexoct {hexadecimal} - hexadecimal to octal\n"
   "hexdec {hexadecimal} - hexadecimal to decimal\n"
+  "deg {degrees|deg min sec} - decimal degrees from and to degrees, minutes, seconds\n"
+  "degrad {degrees} - degrees to radians\n"
+  "deggrad {degrees} - degrees to grads\n"
+  "raddeg {radians} - radians to degrees\n"
+  "radgrad {radians} - radians to grads\n"
+  "graddeg {grads} - grads to degrees\n"
+  "gradrad {grads} - grads to radians\n"
+  "recpol {x} {y} - rectangular to polar coordinates\n"
+  "polrec {length} {angle rad} - polar to rectangular coordinates\n"
   "qth [locator]|{[lat] [lon]} - ham QTH locator\n"
   "\n"
   "Math and statistics:\n"
@@ -2832,13 +2835,15 @@ void terminal_execute_single(char *str) {
   else if(strcmp(cmdline_params[0], "date") == 0) {
     if(arg_count == 1) {
       set_local_time_from_unix_timestamp();
-      sprintf(buff, "%04d-%02d-%02d %d:%02d:%02d", global_year, global_month, global_day, global_hours, global_minutes, global_seconds);
+      get_current_datetime_formatted(buff);
+      //sprintf(buff, "%04d-%02d-%02d %d:%02d:%02d", global_year, global_month, global_day, global_hours, global_minutes, global_seconds);
     }
     else {
       int year, month, day, day_of_week, hour, minute, second;
       i1 = strtol(cmdline_params[1], NULL, 10); //
       get_datetime_from_unixtime(i1, 0, &year, &month, &day, &day_of_week, &hour, &minute, &second);
-      sprintf(buff, "%04d-%02d-%02d %d:%02d:%02d", year, month, day, hour, minute, second);
+      get_datetime_formatted(buff, year, month, day, hour, minute, second);
+      //sprintf(buff, "%04d-%02d-%02d %d:%02d:%02d", year, month, day, hour, minute, second);
     }
     terminal_println(buff);
   }
@@ -2853,7 +2858,9 @@ void terminal_execute_single(char *str) {
     }
     get_datetime_from_unixtime(i1, 0, &year, &month, &day, &day_of_week, &hour, &minute, &second);
 
-    sprintf(buff, "UTC time is %04d-%02d-%02d %d:%02d:%02d", year, month, day, hour, minute, second);
+    terminal_print("UTC time is ");
+    get_datetime_formatted(buff, year, month, day, hour, minute, second);
+    //sprintf(buff, "UTC time is %04d-%02d-%02d %d:%02d:%02d", year, month, day, hour, minute, second);
     terminal_println(buff);
   }
   else if(strcmp(cmdline_params[0], "unixtime") == 0) {
@@ -2889,7 +2896,8 @@ void terminal_execute_single(char *str) {
         + (strtol(cmdline_params[2], NULL, 10) - global_minutes) * 60
         + strtol(cmdline_params[3], NULL, 10) - global_seconds;
       set_local_time_from_unix_timestamp();
-      sprintf(buff, "Current time: %d:%02d:%02d", global_hours, global_minutes, global_seconds);
+      get_current_time_hms_formatted(buff);
+      //sprintf(buff, "Current time: %d:%02d:%02d", global_hours, global_minutes, global_seconds);
       terminal_println(buff);
     }
   }
@@ -2904,7 +2912,9 @@ void terminal_execute_single(char *str) {
       
       global_unixtime_retrieved += get_unixtime_from_datetime(global_timezone, year, month, day, 0, 0, 0) - get_unixtime_from_current_date();
       set_local_time_from_unix_timestamp();
-      sprintf(buff, "Current date: %04d-%02d-%02d", global_year, global_month, global_day);
+      terminal_print("Current date: ");
+      get_current_date_formatted(buff);
+      //sprintf(buff, "Current date: %04d-%02d-%02d", global_year, global_month, global_day);
       terminal_println(buff);
     }
   }
@@ -2916,7 +2926,9 @@ void terminal_execute_single(char *str) {
       i1 = get_unixtime_from_string(cmdline_params[1]);
       global_unixtime_retrieved += i1 - get_unixtime_from_current_datetime();
       set_local_time_from_unix_timestamp();
-      sprintf(buff, "Current datetime: %04d-%02d-%02d %d:%02d:%02d", global_year, global_month, global_day, global_hours, global_minutes, global_seconds);
+      terminal_print("Current datetime: ");
+      get_current_datetime_formatted(buff);
+      //sprintf(buff, "Current datetime: %04d-%02d-%02d %d:%02d:%02d", global_year, global_month, global_day, global_hours, global_minutes, global_seconds);
       terminal_println(buff);
     }
   }
@@ -2956,7 +2968,8 @@ void terminal_execute_single(char *str) {
         case 'w': i += i1 * 86400 * 7; break;
       }
       get_datetime_from_unixtime(i, global_timezone, &year, &month, &day, &day_of_week, &hour, &minute, &second);
-      sprintf(buff, "%04d-%02d-%02d %d:%02d:%02d", year, month, day, hour, minute, second);
+      get_datetime_formatted(buff, year, month, day, hour, minute, second);
+      //sprintf(buff, "%04d-%02d-%02d %d:%02d:%02d", year, month, day, hour, minute, second);
       terminal_println(buff);
     }
   }
@@ -2977,7 +2990,8 @@ void terminal_execute_single(char *str) {
         case 'w': i -= i1 * 86400 * 7; break;
       }
       get_datetime_from_unixtime(i, global_timezone, &year, &month, &day, &day_of_week, &hour, &minute, &second);
-      sprintf(buff, "%04d-%02d-%02d %d:%02d:%02d", year, month, day, hour, minute, second);
+      get_datetime_formatted(buff, year, month, day, hour, minute, second);
+      //sprintf(buff, "%04d-%02d-%02d %d:%02d:%02d", year, month, day, hour, minute, second);
       terminal_println(buff);
     }
   }
@@ -3149,7 +3163,7 @@ void terminal_execute_single(char *str) {
     terminal_println(buff);
   }
   else if(strcmp(cmdline_params[0], "uname") == 0) {
-    sprintf(buff, "ESP32 CYD PDA v1.4 by sau412");
+    sprintf(buff, "ESP32 CYD PDA v1.8 by sau412");
     terminal_println(buff);
     sprintf(buff, "Build time: %s %s", __DATE__, __TIME__);
     terminal_println(buff);
@@ -3460,6 +3474,122 @@ void terminal_execute_single(char *str) {
     else {
       l = strtoul(cmdline_params[1], NULL, 16);
       sprintf(buff, "%lu", l);
+      terminal_println(buff);
+    }
+  }
+  else if(strcmp(cmdline_params[0], "deg") == 0) {
+    if(arg_count < 2) {
+      terminal_println("Usage: deg {degrees|deg min sec}");
+    }
+    else {
+      // Если есть десятичная точка в первом и единственном аргументе
+      if(arg_count == 2 && strchr(cmdline_params[1], '.')) {
+        char sign = 0;
+        d1 = strtod(cmdline_params[1], NULL);
+        if(d1 < 0) {
+          sign = 1;
+          d1 = abs(d1);
+        }
+        i1 = floor(d1); // Целая часть - градусы
+        d2 = fmod(d1, 1); // Дробная часть это минуты и секунды
+        i2 = floor(d2 * 60); // Минуты - дробная часть на 60
+        d3 = 60.0 * fmod(d2 * 60, 1); // Секунды - остаток от деления на 60
+        sprintf(buff, "%s%d deg %d min %g sec", sign ? "-" : "", i1, i2, d3);
+      }
+      else {
+        d1 = strtod(cmdline_params[1], NULL);
+        d2 = 0;
+        if(arg_count >= 3) {
+          d2 = strtod(cmdline_params[2], NULL);
+        }
+        d3 = 0;
+        if(arg_count == 4) {
+          d3 = strtod(cmdline_params[3], NULL);
+        }
+        sprintf(buff, "%g deg", d1 + d2 / 60 + d3 / 3600);
+      }
+      terminal_println(buff);
+    }
+  }
+  else if(strcmp(cmdline_params[0], "degrad") == 0) {
+    if(arg_count != 2) {
+      terminal_println("Usage: degrad {degrees}");
+    }
+    else {
+      d1 = strtod(cmdline_params[1], NULL);
+      sprintf(buff, "%g rad or %g * PI rad", PI * d1 / 180, d1 / 180);
+      terminal_println(buff);
+    }
+  }
+  else if(strcmp(cmdline_params[0], "deggrad") == 0) {
+    if(arg_count != 2) {
+      terminal_println("Usage: deggrad {degrees}");
+    }
+    else {
+      d1 = strtod(cmdline_params[1], NULL);
+      sprintf(buff, "%g grad", 200 * d1 / 180);
+      terminal_println(buff);
+    }
+  }
+  else if(strcmp(cmdline_params[0], "raddeg") == 0) {
+    if(arg_count != 2) {
+      terminal_println("Usage: raddeg {radians}");
+    }
+    else {
+      d1 = strtod(cmdline_params[1], NULL);
+      sprintf(buff, "%g degress", 180.0 * d1 / PI);
+      terminal_println(buff);
+    }
+  }
+  else if(strcmp(cmdline_params[0], "radgrad") == 0) {
+    if(arg_count != 2) {
+      terminal_println("Usage: radgrad {radians}");
+    }
+    else {
+      d1 = strtod(cmdline_params[1], NULL);
+      sprintf(buff, "%g grad", 200.0 * d1 / PI);
+      terminal_println(buff);
+    }
+  }
+  else if(strcmp(cmdline_params[0], "graddeg") == 0) {
+    if(arg_count != 2) {
+      terminal_println("Usage: graddeg {grads}");
+    }
+    else {
+      d1 = strtod(cmdline_params[1], NULL);
+      sprintf(buff, "%g deg", 180.0 * d1 / 200);
+      terminal_println(buff);
+    }
+  }
+  else if(strcmp(cmdline_params[0], "gradrad") == 0) {
+    if(arg_count != 2) {
+      terminal_println("Usage: gradrad {grads}");
+    }
+    else {
+      d1 = strtod(cmdline_params[1], NULL);
+      sprintf(buff, "%g rad or %g * PI rad", PI * d1 / 200, d1 / 200);
+      terminal_println(buff);
+    }
+  }
+  else if(strcmp(cmdline_params[0], "recpol") == 0) {
+    if(arg_count != 3) {
+      terminal_println("Usage: recpol {x} {y}");
+    }
+    else {
+      d1 = strtod(cmdline_params[1], NULL);
+      d2 = strtod(cmdline_params[2], NULL);
+      sprintf(buff, "Length %g angle %g rad", sqrt(d1 * d1 + d2 * d2), atan2(d2, d1));
+      terminal_println(buff);
+    }
+  }
+  else if(strcmp(cmdline_params[0], "polrec") == 0) {
+    if(arg_count != 3) {
+      terminal_println("Usage: polrec {length} {angle rad}");
+    }
+    else {
+      d1 = strtod(cmdline_params[1], NULL);
+      d2 = strtod(cmdline_params[2], NULL);
+      sprintf(buff, "x = %g, y = %g", d1 * cos(d2), d1 * sin(d2));
       terminal_println(buff);
     }
   }
@@ -12865,6 +12995,7 @@ void backups_action(int action_index, char *filename) {
   if(action_index == 0) {
     // Создать бэкап
     if(drawConfirm("Backup FFat to SD?") == 0) {
+      // Дата без учёта формата для однозначности
       sprintf(buff, "%s/%04d-%02d-%02d_%02d-%02d-%02d", BACKUPS_PATH, global_year, global_month, global_day, global_hours, global_minutes, global_seconds);
       SD.mkdir(buff);
       cp_recursive_between_storages(&FFat, "/", &SD, buff);
@@ -13527,6 +13658,7 @@ void schedule(char mode, char *io_buff) {
       // Заполняем данные месяца, есть ли заметки
       for(i = 1; i < 32; i++) {
         day_to_record_present[i] = 0;
+        // Дата без учёта формата, для однозначности
         sprintf(filename, "%s/%04d-%02d-%02d", SCHEDULE_PATH, year, month, i);
         if(Storage->exists(filename)) {
           day_to_record_present[i] = 1;
@@ -13620,6 +13752,7 @@ void schedule(char mode, char *io_buff) {
     
     if(selected_day > 0) {
       //Serial.printf("selected_day = %d, prev_selected_day = %d\n", selected_day, prev_selected_day);
+      // Дата без учёта формата для однозначности
       sprintf(filename, "%s/%04d-%02d-%02d", SCHEDULE_PATH, year, month, selected_day);
       sprintf(buff, "%04d-%02d-%02d", year, month, selected_day);
       if(prev_selected_day == selected_day) {
@@ -15913,7 +16046,7 @@ void l_system_draw(char *data, double step_angle) {
     }
     scale = max(x_max - x_min, y_max - y_min);
     if(scale == 0) scale = 1;
-    scale /= tft.width();
+    scale /= (tft.width() - 1);
 
     if(y_max - y_min > x_max - x_min) {
       x_offset = (tft.width() - tft.width() * (x_max - x_min) / (y_max - y_min)) / 2;
@@ -17189,6 +17322,7 @@ void screensaver(char mode, char *io_buff) {
     "Mood Lamp",
     "Through Universe",
     "Gas",
+    "Defrag",
     NULL
   };
   char app_icon[] = {
@@ -17268,6 +17402,10 @@ void screensaver(char mode, char *io_buff) {
       // Gas
       if(button_pressed == 8) {
         screensaver_gas();
+      }
+      // Defrag
+      if(button_pressed == 9) {
+        screensaver_defrag();
       }
       clearScreen();
       drawAppTitle("Screensavers");
@@ -17778,6 +17916,282 @@ void screensaver_gas() {
       if(y) free(y);
       if(dx) free(dx);
       if(dy) free(dy);
+      touchWaitRelease();
+      break;
+    }
+  }
+}
+
+// Дефрагментация диска
+#define DEFRAG_ICON_WIDTH 8
+#define DEFRAG_ICON_HEIGHT 10
+#define DEFRAG_WIDTH ((tft.width() - 8) / DEFRAG_ICON_WIDTH)
+#define DEFRAG_HEIGHT ((tft.height() - 20) / DEFRAG_ICON_HEIGHT)
+#define DEFRAG_TOTAL (DEFRAG_WIDTH * DEFRAG_HEIGHT)
+
+void screensaver_defrag() {
+  int disk[DEFRAG_TOTAL];
+  int i;
+  int x, y;
+  int redraw = 1;
+  int current_cluster_index;
+  int min_cluster_value;
+  int min_cluster_index;
+  int first_free;
+  char cluster_used[] = {
+    8, 10,
+    0xFF, 0xFF, 0xFF, 0xFF,
+    0xF0, 0x00, 0x00, 0x00,
+    0xF0, 0xEE, 0xEE, 0xE0,
+    0xF0, 0xEE, 0xEE, 0xE0,
+    0xF0, 0xEE, 0xEE, 0xE0,
+    0xF0, 0xEE, 0xEE, 0xE0,
+    0xF0, 0xEE, 0xEE, 0xE0,
+    0xF0, 0xEE, 0xEE, 0xE0,
+    0xF0, 0xEE, 0xEE, 0xE0,
+    0xF0, 0x00, 0x00, 0x00,    
+  };
+  char cluster_free[] = {
+    8, 10,
+    0xFF, 0xFF, 0xFF, 0xFF,
+    0xFF, 0xFF, 0xFF, 0xFF,
+    0xFF, 0xFF, 0xFF, 0xFF,
+    0xFF, 0xFF, 0xFF, 0xFF,
+    0xFF, 0xFF, 0xFF, 0xFF,
+    0xFF, 0xFF, 0xFF, 0xFF,
+    0xFF, 0xFF, 0xFF, 0xFF,
+    0xFF, 0xFF, 0xFF, 0xFF,
+    0xFF, 0xFF, 0xFF, 0xFF,
+    0xFF, 0xFF, 0xFF, 0xFF,    
+  };
+  char cluster_read[] = {
+    8, 10,
+    0xFF, 0xFF, 0xFF, 0xFF,
+    0xF0, 0x00, 0x00, 0x00,
+    0xF0, 0xAA, 0xAA, 0xA0,
+    0xF0, 0xAA, 0xAA, 0xA0,
+    0xF0, 0xAA, 0xAA, 0xA0,
+    0xF0, 0xAA, 0xAA, 0xA0,
+    0xF0, 0xAA, 0xAA, 0xA0,
+    0xF0, 0xAA, 0xAA, 0xA0,
+    0xF0, 0xAA, 0xAA, 0xA0,
+    0xF0, 0x00, 0x00, 0x00,    
+  };
+  char cluster_write[] = {
+    8, 10,
+    0xFF, 0xFF, 0xFF, 0xFF,
+    0xF0, 0x00, 0x00, 0x00,
+    0xF0, 0x99, 0x99, 0x90,
+    0xF0, 0x99, 0x99, 0x90,
+    0xF0, 0x99, 0x99, 0x90,
+    0xF0, 0x99, 0x99, 0x90,
+    0xF0, 0x99, 0x99, 0x90,
+    0xF0, 0x99, 0x99, 0x90,
+    0xF0, 0x99, 0x99, 0x90,
+    0xF0, 0x00, 0x00, 0x00,    
+  };
+  char cluster_optimized[] = {
+    8, 10,
+    0xFF, 0xFF, 0xFF, 0xFF,
+    0xF0, 0x00, 0x00, 0x00,
+    0xF0, 0x4E, 0x4E, 0x40,
+    0xF0, 0xE4, 0xE4, 0xE0,
+    0xF0, 0x4E, 0x4E, 0x40,
+    0xF0, 0xE4, 0xE4, 0xE0,
+    0xF0, 0x4E, 0x4E, 0x40,
+    0xF0, 0xE4, 0xE4, 0xE0,
+    0xF0, 0x4E, 0x4E, 0x40,
+    0xF0, 0x00, 0x00, 0x00,    
+  };
+  char cluster_system[] = {
+    8, 10,
+    0xFF, 0xFF, 0xFF, 0xFF,
+    0xF0, 0x00, 0x09, 0x99,
+    0xF0, 0xF0, 0x99, 0x99,
+    0xF0, 0xF0, 0x00, 0x90,
+    0xF0, 0xF0, 0x00, 0x00,
+    0xF0, 0xFF, 0xFF, 0xF0,
+    0xF0, 0xFF, 0xFF, 0xF0,
+    0xF0, 0xFF, 0xFF, 0xF0,
+    0xF0, 0xFF, 0xFF, 0xF0,
+    0xF0, 0x00, 0x00, 0x00,    
+  };
+  char cluster_error[] = {
+    8, 10,
+    0xFF, 0xFF, 0xFF, 0xFF,
+    0xF0, 0x00, 0x00, 0x00,
+    0xF0, 0x9F, 0xFF, 0xF0,
+    0xF0, 0x99, 0xFF, 0xF0,
+    0xF0, 0xF9, 0x9F, 0xF0,
+    0xF0, 0xFF, 0x99, 0xF0,
+    0xF0, 0xFF, 0xF9, 0x90,
+    0xF0, 0xFF, 0xFF, 0x90,
+    0xF0, 0xFF, 0xFF, 0xF0,
+    0xF0, 0x00, 0x00, 0x00,    
+  };
+  char *cluster = NULL;
+
+  while(1) {
+    if(redraw == 1) {
+      clearScreen();
+      drawAppTitle("Defrag");
+
+      // Отмечаем всё как свободное
+      for(i = 0; i < DEFRAG_TOTAL; i++) {
+        disk[i] = -1;
+      }
+
+      // Занимаем часть диска
+      for(i = 0; i < DEFRAG_TOTAL * 0.9; i++) {
+        current_cluster_index = random(0, DEFRAG_TOTAL);
+        disk[current_cluster_index] = i;
+      }
+
+      // Системные файлы
+      while(random(0, 2) == 0) {
+        for(i = random(0, DEFRAG_TOTAL); random(0, 10) != 0 && i < DEFRAG_TOTAL; i++) {
+          disk[i] = -3;
+        }
+      }
+
+      // Ошибки на диске
+      while(random(0, 2) == 0) {
+        for(i = random(0, DEFRAG_TOTAL); random(0, 10) != 0 && i < DEFRAG_TOTAL; i++) {
+          disk[i] = -2;
+        }
+      }
+
+      // Рисуем
+      for(y = 0; y < DEFRAG_HEIGHT; y++) {
+        for(x = 0; x < DEFRAG_WIDTH; x++) {
+          cluster = cluster_free;
+          if(disk[x + y * DEFRAG_WIDTH] == -3) {
+            cluster = cluster_system;
+          }
+          else if(disk[x + y * DEFRAG_WIDTH] == -2) {
+            cluster = cluster_error;
+          }
+          else if(disk[x + y * DEFRAG_WIDTH] != -1) {
+            cluster = cluster_used;
+          }
+          image16_from_bytes(4 + x * DEFRAG_ICON_WIDTH, 18 + y * DEFRAG_ICON_HEIGHT, cluster);
+          delayOrTouchWait(10);
+        }
+      }
+
+      current_cluster_index = 0;
+      redraw = 0;
+    }
+
+    // Если текущий кластер не системный и не повреждённый
+    if(disk[current_cluster_index] >= -1) {
+      // Ищем минимальный с текущего кластера
+      min_cluster_index = -1;
+      for(i = current_cluster_index; i < DEFRAG_TOTAL; i++) {
+        if(disk[i] >= 0 && (min_cluster_index == -1 || min_cluster_value > disk[i])) {
+          min_cluster_value = disk[i];
+          min_cluster_index = i;
+        }
+      }
+      if(min_cluster_index == -1) {
+        delayOrTouchWait(3000);
+        redraw = 1;
+        continue;
+      }
+
+      // Если уже оптимально - отмечаем как оптимальный
+      if(current_cluster_index == min_cluster_index) {
+        // Отмечаем текущий как оптимальный
+        cluster = cluster_optimized;
+        x = current_cluster_index % DEFRAG_WIDTH;
+        y = current_cluster_index / DEFRAG_WIDTH;
+        image16_from_bytes(4 + x * DEFRAG_ICON_WIDTH, 18 + y * DEFRAG_ICON_HEIGHT, cluster);
+      }
+      else {
+        // Если текущий кластер занят - освобождаем
+        if(disk[current_cluster_index] != -1) {
+          // Ищем произвольное свободное место
+          do {
+            first_free = random(current_cluster_index, DEFRAG_TOTAL);
+          } while(disk[first_free] != -1);
+
+          // Перемещаем текущий кластер туда
+          // Типа читаем
+          cluster = cluster_read;
+          x = current_cluster_index % DEFRAG_WIDTH;
+          y = current_cluster_index / DEFRAG_WIDTH;
+          image16_from_bytes(4 + x * DEFRAG_ICON_WIDTH, 18 + y * DEFRAG_ICON_HEIGHT, cluster);
+          delayOrTouchWait(100);
+
+          // Типа записываем
+          cluster = cluster_write;
+          x = first_free % DEFRAG_WIDTH;
+          y = first_free / DEFRAG_WIDTH;
+          image16_from_bytes(4 + x * DEFRAG_ICON_WIDTH, 18 + y * DEFRAG_ICON_HEIGHT, cluster);
+          delayOrTouchWait(100);
+
+          // Записали
+          cluster = cluster_used;
+          x = first_free % DEFRAG_WIDTH;
+          y = first_free / DEFRAG_WIDTH;
+          image16_from_bytes(4 + x * DEFRAG_ICON_WIDTH, 18 + y * DEFRAG_ICON_HEIGHT, cluster);
+          delayOrTouchWait(100);
+
+          // Типа освобождаем
+          cluster = cluster_free;
+          x = current_cluster_index % DEFRAG_WIDTH;
+          y = current_cluster_index / DEFRAG_WIDTH;
+          image16_from_bytes(4 + x * DEFRAG_ICON_WIDTH, 18 + y * DEFRAG_ICON_HEIGHT, cluster);
+          delayOrTouchWait(100);
+
+          disk[first_free] = disk[current_cluster_index];
+          disk[current_cluster_index] = -1;
+        }
+
+        // Перемещаем минимальный на указанное место
+        // Типа читаем
+        cluster = cluster_read;
+        x = min_cluster_index % DEFRAG_WIDTH;
+        y = min_cluster_index / DEFRAG_WIDTH;
+        image16_from_bytes(4 + x * DEFRAG_ICON_WIDTH, 18 + y * DEFRAG_ICON_HEIGHT, cluster);
+
+        delayOrTouchWait(100);
+
+        // Типа записываем
+        cluster = cluster_write;
+        x = current_cluster_index % DEFRAG_WIDTH;
+        y = current_cluster_index / DEFRAG_WIDTH;
+        image16_from_bytes(4 + x * DEFRAG_ICON_WIDTH, 18 + y * DEFRAG_ICON_HEIGHT, cluster);
+
+        delayOrTouchWait(100);
+
+        // Отмечаем как оптимальный (записали)
+        cluster = cluster_optimized;
+        x = current_cluster_index % DEFRAG_WIDTH;
+        y = current_cluster_index / DEFRAG_WIDTH;
+        image16_from_bytes(4 + x * DEFRAG_ICON_WIDTH, 18 + y * DEFRAG_ICON_HEIGHT, cluster);
+
+        delayOrTouchWait(100);
+
+        // Типа освобождаем
+        cluster = cluster_free;
+        x = min_cluster_index % DEFRAG_WIDTH;
+        y = min_cluster_index / DEFRAG_WIDTH;
+        image16_from_bytes(4 + x * DEFRAG_ICON_WIDTH, 18 + y * DEFRAG_ICON_HEIGHT, cluster);
+
+        disk[current_cluster_index] = min_cluster_value;
+        disk[min_cluster_index] = -1;
+      }
+    }
+
+    current_cluster_index++;
+    if(current_cluster_index == DEFRAG_TOTAL) {
+      delayOrTouchWait(3000);
+      redraw = 1;
+      continue;
+    }
+
+    if(touchCheckNowait()) {
       touchWaitRelease();
       break;
     }
@@ -18920,7 +19334,7 @@ void timeSyncCallback(struct timeval *tv) {
   global_unixtime_synced = 1;
   time(&global_unixtime_retrieved);
   global_unixtime_retrieved_millis = millis();
-  //drawAppTitleRight();
+  global_is_time_set = 1;
 }
 
 void get_current_timestamp_wifi() {
@@ -22485,8 +22899,10 @@ void dashboard_calendar(char mode, char *io_buff) {
 
       // Выводим всё
       tft.setTextColor(color_scheme_fg, color_scheme_bg);
-      sprintf(buff, " %d:%02d:%02d ", hour, min, sec);
-      tft.drawCentreString(buff, tft.width() / 2, 35, FONT_BIGGER);
+      get_current_time_hms_for_big(buff);
+      //sprintf(buff, " %d:%02d:%02d ", hour, min, sec);
+      drawTextBar(buff, 0, 27, tft.width(), 48, color_scheme_fg, color_scheme_bg, FONT_BIGGER);
+      //tft.drawCentreString(buff, tft.width() / 2, 35, FONT_BIGGER);
 
 
       // 3 сентября переворачиваем календарь
@@ -22502,7 +22918,8 @@ void dashboard_calendar(char mode, char *io_buff) {
 
       //tft.drawCentreString(day_of_week_name[day_of_week], tft.width() / 2, 70, FONT_BIG);
       sprintf(buff, "%s, %04d", month_name[month], year);
-      tft.drawCentreString(buff, tft.width() / 2, 90, FONT_BIG);
+      drawTextBar(buff, 0, 85, tft.width(), tft.fontHeight(FONT_BIG), color_scheme_fg, color_scheme_bg, FONT_BIG);
+      //tft.drawCentreString(buff, tft.width() / 2, 85, FONT_BIG);
 
       // Календарь на текущий месяц
       cal_day = 1;
@@ -22732,8 +23149,10 @@ void dashboard_network() {
       unix_timestamp = global_unixtime_retrieved + (millis() - global_unixtime_retrieved_millis) / 1000;
       // Выводим всё
       tft.setTextColor(color_scheme_fg, color_scheme_bg);
-      sprintf(buff, " %d:%02d:%02d ", global_hours, global_minutes, global_seconds);
-      tft.drawCentreString(buff, tft.width() / 2, 27, FONT_BIGGER);
+      //sprintf(buff, " %d:%02d:%02d ", global_hours, global_minutes, global_seconds);
+      //tft.drawCentreString(buff, tft.width() / 2, 27, FONT_BIGGER);
+      get_current_time_hms_for_big(buff);
+      drawTextBar(buff, 0, 27, tft.width(), 48, color_scheme_fg, color_scheme_bg, FONT_BIGGER);
 
       // Разные сетевые параметры
       i = 0;
@@ -22891,9 +23310,9 @@ void dashboard_channel_monitor() {
   char buff[80];
   long packets_counts[WIFI_MAX_CHANNELS];
   long this_ch_count = 0;
-  long total_packets = 1;
+  long total_packets = 0;
 
-  total_packets = 1;
+  total_packets = 0;
   for(ch = 0; ch < WIFI_MAX_CHANNELS; ch++) {
     packets_counts[ch] = 0;
   }
@@ -22910,8 +23329,10 @@ void dashboard_channel_monitor() {
   while(1) {
     // Выводим время
     tft.setTextColor(color_scheme_fg, color_scheme_bg);
-    sprintf(buff, " %d:%02d:%02d ", global_hours, global_minutes, global_seconds);
-    tft.drawCentreString(buff, tft.width() / 2, 27, FONT_BIGGER);
+    //sprintf(buff, " %d:%02d:%02d ", global_hours, global_minutes, global_seconds);
+    //tft.drawCentreString(buff, tft.width() / 2, 27, FONT_BIGGER);
+    get_current_time_hms_for_big(buff);
+    drawTextBar(buff, 0, 27, tft.width(), 48, color_scheme_fg, color_scheme_bg, FONT_BIGGER);
 
     esp_wifi_set_channel(ch, WIFI_SECOND_CHAN_NONE);
     wifi_packet_count = 0;
@@ -22921,12 +23342,12 @@ void dashboard_channel_monitor() {
     total_packets += this_ch_count;
     packets_counts[ch] += this_ch_count;
 
-    sprintf(buff, "Ch %d: %d pkts/s, %d total, %d%%     ", ch, this_ch_count, packets_counts[ch], 100 * packets_counts[ch] / total_packets);
+    sprintf(buff, "Ch %d: %d pkts/s, %d total, %d%%     ", ch, this_ch_count, total_packets > 0 ? packets_counts[ch], 100 * packets_counts[ch] / total_packets : 0);
     tft.setTextColor(color_scheme_fg, color_scheme_bg);
     tft.drawString(buff, 1, 60 + 18 * ch, FONT_DEFAULT);
 
     tft.fillRect(0, 60 + 18 * ch + 15, tft.width(), 3, color_scheme_bg);
-    tft.fillRect(0, 60 + 18 * ch + 15, tft.width() * packets_counts[ch] / total_packets, 3, color_scheme_fg);
+    tft.fillRect(0, 60 + 18 * ch + 15, total_packets > 0 ? tft.width() * packets_counts[ch] / total_packets : 0, 3, color_scheme_fg);
 
     ch++;
     if(ch >= WIFI_MAX_CHANNELS) {
@@ -23030,10 +23451,24 @@ void dashboard_world_time() {
         minute = (day_millis / 60) % 60;
         second = day_millis % 60;
 
-        sprintf(buff, " %d:%02d:%02d ", hour, minute, second);
+        //sprintf(buff, " %d:%02d:%02d ", hour, minute, second);
         tft.setTextColor(color_scheme_fg, color_scheme_bg);
         //tft.setTextColor(color_scheme_fg, TFT_LIGHTGREY);
-        tft.drawCentreString(buff, tft.width() / 2, 36 + ((tft.height() - 16) / 4) * i, FONT_BIGGER);
+        //tft.drawCentreString(buff, tft.width() / 2, 36 + ((tft.height() - 16) / 4) * i, FONT_BIGGER);
+        //
+        if(global_is_12h_time) {
+            if(global_is_time_set) {
+              sprintf(buff, "%d:%02d %s", hour % 12 == 0? 12 : hour % 12, minute, hour >= 12 ? "pm" : "am");
+            }
+            else {
+              sprintf(buff, "--:--:--");
+            }
+        }
+        else {
+          get_time_hms_for_big(buff, hour, minute, second);
+        }
+        
+        drawTextBar(buff, 0, 36 + ((tft.height() - 16) / 4) * i, tft.width(), tft.fontHeight(FONT_BIGGER) + 5, color_scheme_fg, color_scheme_bg, FONT_BIGGER);
       }
     }
     
@@ -23092,8 +23527,10 @@ void dashboard_bitcoin() {
 
       // Выводим всё
       tft.setTextColor(color_scheme_fg, color_scheme_bg);
-      sprintf(buff, " %d:%02d:%02d ", global_hours, global_minutes, global_seconds);
-      tft.drawCentreString(buff, tft.width() / 2, 27, FONT_BIGGER);
+      //sprintf(buff, " %d:%02d:%02d ", global_hours, global_minutes, global_seconds);
+      //tft.drawCentreString(buff, tft.width() / 2, 27, FONT_BIGGER);
+      get_current_time_hms_for_big(buff);
+      drawTextBar(buff, 0, 27, tft.width(), 48, color_scheme_fg, color_scheme_bg, FONT_BIGGER);
 
       // Текущий блок
       if(millis() - prev_update_price > BITCOIN_UPDATE_INTERVAL) {
@@ -23107,8 +23544,10 @@ void dashboard_bitcoin() {
         i++;
 
         tft.setTextColor(color_scheme_fg, color_scheme_bg);
-        sprintf(buff, " %d:%02d:%02d ", global_hours, global_minutes, global_seconds);
-        tft.drawCentreString(buff, tft.width() / 2, 27, FONT_BIGGER);
+        //sprintf(buff, " %d:%02d:%02d ", global_hours, global_minutes, global_seconds);
+        //tft.drawCentreString(buff, tft.width() / 2, 27, FONT_BIGGER);
+        get_current_time_hms_for_big(buff);
+        drawTextBar(buff, 0, 27, tft.width(), 48, color_scheme_fg, color_scheme_bg, FONT_BIGGER);
 
         // Неподтверждённые транзакции
         if(get_file_https("https://blockchain.info/q/unconfirmedcount", buff, 80) == 200) {
@@ -23119,8 +23558,10 @@ void dashboard_bitcoin() {
         i++;
 
         tft.setTextColor(color_scheme_fg, color_scheme_bg);
-        sprintf(buff, " %d:%02d:%02d ", global_hours, global_minutes, global_seconds);
-        tft.drawCentreString(buff, tft.width() / 2, 27, FONT_BIGGER);
+        //sprintf(buff, " %d:%02d:%02d ", global_hours, global_minutes, global_seconds);
+        //tft.drawCentreString(buff, tft.width() / 2, 27, FONT_BIGGER);
+        get_current_time_hms_for_big(buff);
+        drawTextBar(buff, 0, 27, tft.width(), 48, color_scheme_fg, color_scheme_bg, FONT_BIGGER);
 
         // Средняя цена за 24 часа
         if(get_file_https("https://blockchain.info/q/24hrprice", buff, 80) == 200) {
@@ -23155,6 +23596,8 @@ void dashboard_bitcoin() {
   }
 }
 
+#define RUF_UPDATE_INTERVAL 300000
+
 void dashboard_random_useless_facts() {
   char buff[500];
   char ruf_list[2048];
@@ -23165,8 +23608,13 @@ void dashboard_random_useless_facts() {
   int result;
   time_t unix_timestamp;
   long prev_update_millis = 0;
-  long prev_update_price = -60000;
+  long prev_update_data = 0;
   int base_offset = 75;
+  char update_fact = 0;
+  int button_pressed;
+  char *buttons[] = {
+    "New Fact", NULL
+  };
 
   clearScreen();
   drawAppTitle("Random Useless Facts");
@@ -23179,6 +23627,8 @@ void dashboard_random_useless_facts() {
   strcpy(ruf_list, "");
   //memcpy(ruf_list, 0, 2048);
 
+  update_fact = 1;
+
   while(1) {
     if(millis() - prev_update_millis > CLOCK_UPDATE_SCREEN_INTERVAL) {
       prev_update_millis = millis();
@@ -23186,33 +23636,54 @@ void dashboard_random_useless_facts() {
       unix_timestamp = global_unixtime_retrieved + (millis() - global_unixtime_retrieved_millis) / 1000;
       // Выводим всё
       tft.setTextColor(color_scheme_fg, color_scheme_bg);
-      sprintf(buff, " %d:%02d:%02d ", global_hours, global_minutes, global_seconds);
-      tft.drawCentreString(buff, tft.width() / 2, 27, FONT_BIGGER);
+      //sprintf(buff, " %d:%02d:%02d ", global_hours, global_minutes, global_seconds);
+      //tft.drawCentreString(buff, tft.width() / 2, 27, FONT_BIGGER);
+      get_current_time_hms_for_big(buff);
+      drawTextBar(buff, 0, 27, tft.width(), 48, color_scheme_fg, color_scheme_bg, FONT_BIGGER);
+
+      if(prev_update_data + RUF_UPDATE_INTERVAL - millis() > 0) {
+        //Serial.printf("%d + %d - %d = %d\n", prev_update_data, RUF_UPDATE_INTERVAL, millis(), prev_update_data + RUF_UPDATE_INTERVAL - millis());
+
+        sprintf(buff, "    Next in %d min %d sec    ",
+          (prev_update_data + RUF_UPDATE_INTERVAL - millis()) / 60000,
+          ((prev_update_data + RUF_UPDATE_INTERVAL - millis()) / 1000) % 60
+        );
+
+        drawTextBar(buff, 0, tft.height() - 16 - 32 - 1, tft.width(), 16, color_scheme_inactive_fg, color_scheme_bg, FONT_DEFAULT);
+        //tft.drawCentreString(buff, tft.width() / 2, tft.height() - 16 - 32 - 1, FONT_DEFAULT);
+      }
 
       // Текущий блок
-      if(millis() - prev_update_price > 60000) {
+      if(millis() - prev_update_data > RUF_UPDATE_INTERVAL || update_fact == 1) {
+        drawButtonMatrix(0, tft.height() - 32, tft.width(), 32, buttons, 1, 1);
+
         if(get_random_useless_fact(buff) == 200) {
           Serial.println(buff);
           utf8_to_cp1251(buff);
           Serial.println(buff);
-          len = strlen(buff);
-
-          for(i = 2047; i > len + 1; i--) {
-            ruf_list[i] = ruf_list[i - len - 2];
-          }
-          memcpy(ruf_list, buff, len);
-          ruf_list[len] = '\n';
-          ruf_list[len + 1] = '\n';
-          Serial.println(ruf_list);
+          strcpy(ruf_list, buff);
+        }
+        else {
+          get_current_time_hms_formatted(buff);
+          strcat(buff, " Error getting random fact");
         }
 
-        draw_text_formatted(ruf_list, 1, 80, tft.width() - 2, 15, FONT_DEFAULT, 1);
+        draw_text_formatted(buff, 1, 80, tft.width() - 2, 12, FONT_DEFAULT, 1);
 
-        prev_update_price = millis();
+        prev_update_data = millis();
+        update_fact = 0;
       }
     }
     
     if(!touchCheckNowait()) continue;
+
+    //drawButtonMatrix(0, tft.height() - 32, tft.width(), 32, buttons, 1, 1);
+    button_pressed = touchCheckMatrix(0, tft.height() - 32, tft.width(), 32, buttons, 1, 1);
+    if(button_pressed != -1) {
+      if(button_pressed == 0) {
+        update_fact = 1;
+      }
+    }
 
     touchWaitReleaseOrExit();
     if(global_exit_flag) {
@@ -23288,8 +23759,10 @@ void dashboard_hf_propagation() {
 
       // Выводим всё
       tft.setTextColor(color_scheme_fg, color_scheme_bg);
-      sprintf(buff, " %d:%02d:%02d ", global_hours, global_minutes, global_seconds);
-      tft.drawCentreString(buff, tft.width() / 2, 27, FONT_BIGGER);
+      //sprintf(buff, " %d:%02d:%02d ", global_hours, global_minutes, global_seconds);
+      //tft.drawCentreString(buff, tft.width() / 2, 27, FONT_BIGGER);
+      get_current_time_hms_for_big(buff);
+      drawTextBar(buff, 0, 27, tft.width(), 48, color_scheme_fg, color_scheme_bg, FONT_BIGGER);
 
       // Текущий блок
       if(millis() - prev_update_price > HAMQSL_UPDATE_INTERVAL) {
@@ -23410,8 +23883,10 @@ void dashboard_intervals() {
 
       // Выводим всё
       tft.setTextColor(color_scheme_fg, color_scheme_bg);
-      sprintf(buff, " %d:%02d:%02d ", global_hours, global_minutes, global_seconds);
-      tft.drawCentreString(buff, tft.width() / 2, 27, FONT_BIGGER);
+      //sprintf(buff, " %d:%02d:%02d ", global_hours, global_minutes, global_seconds);
+      //tft.drawCentreString(buff, tft.width() / 2, 27, FONT_BIGGER);
+      get_current_time_hms_for_big(buff);
+      drawTextBar(buff, 0, 27, tft.width(), 48, color_scheme_fg, color_scheme_bg, FONT_BIGGER);
 
       if(millis() - info_update_data_millis >= 1000) {
         info_update_data_millis = millis();
@@ -23593,8 +24068,10 @@ void dashboard_morse_news() {
 
       // Выводим всё
       tft.setTextColor(color_scheme_fg, color_scheme_bg);
-      sprintf(buff, " %d:%02d:%02d ", global_hours, global_minutes, global_seconds);
-      tft.drawCentreString(buff, tft.width() / 2, 27, FONT_BIGGER);
+      //sprintf(buff, " %d:%02d:%02d ", global_hours, global_minutes, global_seconds);
+      //tft.drawCentreString(buff, tft.width() / 2, 27, FONT_BIGGER);
+      get_current_time_hms_for_big(buff);
+      drawTextBar(buff, 0, 27, tft.width(), 48, color_scheme_fg, color_scheme_bg, FONT_BIGGER);
 
       tft.setTextColor(color_scheme_inactive_fg, color_scheme_bg);
       if(info_update_data_millis + MORSE_NEWS_INTERVAL - millis() > 0) {
@@ -24083,6 +24560,7 @@ void set_clock(char mode, char *io_buff) {
   clearScreen();
   drawAppTitle("Set Clock");
 
+  global_is_time_set = 1;
   redraw_flag = 1;
   something_changed = 0;
   while(1) {
@@ -25012,7 +25490,7 @@ void clock_control(char mode, char *io_buff) {
     "Alarm minute",
     "Beep on hour",
     "Beep on quarter",
-    "Set clock",
+    "Hour format",
     "NTP sync",
     NULL
   };
@@ -25071,6 +25549,9 @@ void clock_control(char mode, char *io_buff) {
     sprintf(buff, "  %s  ", global_is_beep_quarter_enabled ? "on" : "off");
     tft.drawCentreString(buff, 3 * tft.width() / 4, 28 + 32 * 4, FONT_DEFAULT);
 
+    sprintf(buff, "  %s  ", global_is_12h_time ? "12" : "24");
+    tft.drawCentreString(buff, 3 * tft.width() / 4, 28 + 32 * 5, FONT_DEFAULT);
+
     sprintf(buff, "  %s  ", global_ntp_enabled ? "on" : "off");
     tft.drawCentreString(buff, 3 * tft.width() / 4, 28 + 32 * 6, FONT_DEFAULT);
 
@@ -25115,7 +25596,12 @@ void clock_control(char mode, char *io_buff) {
         }
       }
       else if(button_pressed == 5) {
-        set_clock(APP_MODE_LAUNCH, NULL);
+        if(global_is_12h_time) {
+          global_is_12h_time = 0;
+        }
+        else {
+          global_is_12h_time = 1;
+        }
       }
       else if(button_pressed == 6) {
         if(global_ntp_enabled) {
@@ -25147,6 +25633,8 @@ void clock_control(char mode, char *io_buff) {
           write_key_value_to_file("/Settings/Sound", "beep_hour_enabled_flag", (char *)(global_is_beep_hour_enabled ? "1" : "0"));
           write_key_value_to_file("/Settings/Sound", "beep_quarter_enabled_flag", (char *)(global_is_beep_quarter_enabled ? "1" : "0"));
 
+          write_key_value_to_file("/Settings/Formats", "is_12h_time", (char *)(global_is_12h_time ? "1" : "0"));
+          
           sprintf(buff, "%d", global_ntp_enabled);
           write_file_from_buff("/Settings/NTP", buff);
         }
@@ -26893,6 +27381,87 @@ int get_day_of_week(int year, int month, int day) {
   return (year + year/4 - year/100 + year/400 + anchor[month - 1] + day + 6) % 7;
 }
 
+void get_current_datetime_formatted(char *buff) {
+  if(global_is_time_set) {
+    get_datetime_formatted(buff, global_year, global_month, global_day, global_hours, global_minutes, global_seconds);
+  }
+  else {
+    sprintf(buff, "%04d-%02d-%02d --:--:--", global_year, global_month, global_day);
+  }
+}
+
+void get_datetime_formatted(char *buff, int year, int month, int day, int hours, int minutes, int seconds) {
+  if(global_is_12h_time) {
+    sprintf(buff, "%04d-%02d-%02d %d:%02d:%02d %s", year, month, day, hours % 12 == 0 ? 12 : hours % 12, minutes, seconds, hours >= 12? "PM" : "AM");
+  }
+  else {
+    sprintf(buff, "%04d-%02d-%02d %d:%02d:%02d", year, month, day, hours, minutes, seconds);
+  }
+}
+
+void get_current_date_formatted(char *buff) {
+  sprintf(buff, "%04d-%02d-%02d", global_year, global_month, global_day);
+}
+
+void get_date_formatted(char *buff, int year, int month, int day) {
+  sprintf(buff, "%04d-%02d-%02d", year, month, day);
+}
+
+// Формат для дашбордов, для 12-часового формата AM/PM не влезает
+void get_current_time_hms_for_big(char *buff) {
+  if(global_is_time_set) {
+    get_time_hms_for_big(buff, global_hours, global_minutes, global_seconds);
+  }
+  else {
+    sprintf(buff, "--:--:--");
+  }
+}
+
+void get_time_hms_for_big(char *buff, int hours, int minutes, int seconds) {
+  if(global_is_12h_time) {
+    sprintf(buff, "%d:%02d:%02d", hours % 12 == 0 ? 12 : hours % 12, minutes, seconds);
+  }
+  else {
+    get_time_hms_formatted(buff, hours, minutes, seconds);
+  }
+}
+
+void get_current_time_hms_formatted(char *buff) {
+  if(global_is_time_set) {
+    get_time_hms_formatted(buff, global_hours, global_minutes, global_seconds);
+  }
+  else {
+    sprintf(buff, "--:--:--");
+  }
+}
+
+void get_time_hms_formatted(char *buff, int hours, int minutes, int seconds) {
+  if(global_is_12h_time) {
+    sprintf(buff, "%d:%02d:%02d %s", hours % 12 == 0 ? 12 : hours % 12, minutes, seconds, hours >= 12? "PM" : "AM");
+  }
+  else {
+    sprintf(buff, "%d:%02d:%02d", hours, minutes, seconds);
+  }
+}
+
+void get_current_time_hm_formatted(char *buff) {
+  if(global_is_time_set) {
+    get_time_hm_formatted(buff, global_hours, global_minutes);
+  }
+  else {
+    sprintf(buff, "-:--");
+  }
+}
+
+void get_time_hm_formatted(char *buff, int hours, int minutes) {
+  if(global_is_12h_time) {
+    sprintf(buff, "%d:%02d %s", hours % 12 == 0 ? 12 : hours % 12, minutes, hours >= 12? "PM" : "AM");
+  }
+  else {
+    sprintf(buff, "%d:%02d", hours, minutes);
+  }
+}
+
 void get_sunrise_sunset(int month, int day, double lat, double lon, double *sunrise, double *solar_noon, double *sunset) {
   // Восход и закат
   double N, v, delta, E, h0, w0;
@@ -27768,6 +28337,9 @@ void hexview_file(char *title, char *filename) {
   }
 }
 
+#define AUTOSAVE_FILE "/Settings/Autosave"
+#define AUTOSAVE_INTERVAL_MILLIS 300000
+
 // Редактирование текста в буфере
 char edit_text(char *title, char *contents, long max_len) {
   int file_offset_bytes = 0;
@@ -27801,6 +28373,8 @@ char edit_text(char *title, char *contents, long max_len) {
   int indent_width = (keyboard_indent_left ? KEYBOARD_INDENT_SIZE : 0) + (keyboard_indent_right ? KEYBOARD_INDENT_SIZE : 0);
   TouchPoint p;
   char **keyboard_current = keyboard_nocaps;
+  long last_save_millis = millis();
+  char changed_since_autosave = 0;
 
   clearScreen();
   drawAppTitle(title);
@@ -27982,6 +28556,16 @@ char edit_text(char *title, char *contents, long max_len) {
     drawButtonMatrix(indent_left, 200, tft.width() - indent_width, 120, keyboard_current, 12, 4);
     
     while(touchCheckNowait() == 0) {
+      // Автосохранение
+      if(millis() - last_save_millis > AUTOSAVE_INTERVAL_MILLIS) {
+        if(changed_since_autosave) {
+          Serial.println("Autosave to " AUTOSAVE_FILE);
+          write_file_from_buff(AUTOSAVE_FILE, contents);
+          changed_since_autosave = 0;
+        }
+        last_save_millis = millis();
+      }
+      // Данные с последовательного порта
       while(Serial.available()) {
         byte = Serial.read();
         if(byte >= 0xC0) {
@@ -28000,6 +28584,7 @@ char edit_text(char *title, char *contents, long max_len) {
             cursor_offset_bytes --;
           }
           changes_present = 1;
+          changed_since_autosave = 1;
           update_required_flag = 1;
         }
         // Печатаемые символы
@@ -28011,6 +28596,7 @@ char edit_text(char *title, char *contents, long max_len) {
             contents[cursor_offset_bytes] = byte;
             cursor_offset_bytes++;
             changes_present = 1;
+            changed_since_autosave = 1;
           }
           update_required_flag = 1;
         }
@@ -28035,6 +28621,7 @@ char edit_text(char *title, char *contents, long max_len) {
           cursor_offset_bytes --;
         }
         changes_present = 1;
+        changed_since_autosave = 1;
       }
       else if(button == 24) {
         caps_flag = !caps_flag;
@@ -28064,6 +28651,7 @@ char edit_text(char *title, char *contents, long max_len) {
           }
           cursor_offset_bytes++;
           changes_present = 1;
+          changed_since_autosave = 1;
         }
       }
     }
@@ -33494,18 +34082,8 @@ void drawAppTitleRight() {
   tft.fillRect(tft.width() - 8, 0, 8, 16, color_scheme_title_bg);
   right_offset += 8;
 
-  /*sprintf(buff, "%s%s%s%s%s%s %d:%02d",
-    global_alarm_set ? "A" : "",
-    storage_type == STORAGE_TYPE_SD? "S" : "",
-    storage_type == STORAGE_TYPE_FFAT? "F" : "",
-    AudioTaskHandle != NULL ? "M" : "",
-    wifi_connection_flag ? "W" : "",
-    global_unixtime_synced ? "T" : "",
-    global_hours, global_minutes
-  );*/
-  sprintf(buff, " %d:%02d",
-    global_hours, global_minutes
-  );
+  get_current_time_hm_formatted(buff + 1);
+  buff[0] = ' ';
 
   // Рисуем время и статус
   tft.setTextColor(color_scheme_title_fg, color_scheme_title_bg);
@@ -34887,6 +35465,26 @@ void image16_from_bytes(int start_x, int start_y, char *image) {
 
   for(y = 0; y < height; y++) {
     for(x = 0; x < width; x++) {
+      if(x % 2 == 0) {
+        color_index = image[2 + x / 2 + y * width / 2] >> 4;
+      }
+      else {
+        color_index = image[2 + x / 2 + y * width / 2] & 0x0F;
+      }
+      tft.drawPixel(start_x + x, start_y + y, colors[color_index]);
+    }
+  }
+}
+
+void icon16_from_bytes(int start_x, int start_y, char *image) {
+  int byte_index, bit_index;
+  int x, y;
+  int width = (int)image[0];
+  int height = (int)image[1];
+  int color_index = 0;
+
+  for(y = 1; y < height - 1; y++) {
+    for(x = 1; x < width - 1; x++) {
       if(x % 2 == 0) {
         color_index = image[2 + x / 2 + y * width / 2] >> 4;
       }
@@ -36658,6 +37256,9 @@ void setup() {
     if(read_key_value_from_file("/Settings/Sound", "beep_quarter_enabled_flag", buff)) {
       global_is_beep_quarter_enabled = strtol(buff, NULL, 10);
     }
+    if(read_key_value_from_file("/Settings/Formats", "is_12h_time", buff)) {
+      global_is_12h_time = strtol(buff, NULL, 10);
+    }
     if(read_key_value_from_file("/Settings/Sound", "volume", buff)) {
       global_volume = strtol(buff, NULL, 10);
     }
@@ -36722,6 +37323,7 @@ void setup() {
     if(read_file_to_buff("/Settings/NTP", 79, buff)) {
       global_ntp_enabled = strtol(buff, NULL, 10);
     }
+
     //Serial.printf("Free heap line %d: %d, max alloc %d\n", __LINE__, ESP.getFreeHeap(), ESP.getMaxAllocHeap());
 
     // Получить текущее время из сохранённого в ФС
