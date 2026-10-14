@@ -231,6 +231,15 @@ Converters:
 * hexbin {hexadecimal} - hexadecimal to binary
 * hexoct {hexadecimal} - hexadecimal to octal
 * hexdec {hexadecimal} - hexadecimal to decimal
+* deg {degrees|deg min sec} - decimal degrees from and to degrees, minutes, seconds
+* degrad {degrees} - degrees to radians
+* deggrad {degrees} - degrees to grads
+* raddeg {radians} - radians to degrees
+* radgrad {radians} - radians to grads
+* graddeg {grads} - grads to degrees
+* gradrad {grads} - grads to radians
+* recpol {x} {y} - rectangular to polar coordinates
+* polrec {length} {angle rad} - polar to rectangular coordinates
 * qth [locator]|{[lat] [lon]} - ham QTH locator, see https://en.wikipedia.org/wiki/Maidenhead_Locator_System
 
 Math and statistics:
