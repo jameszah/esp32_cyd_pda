@@ -1278,7 +1278,7 @@ void launcher(char mode, char *io_buff) {
       app_selected_col = global_touch_x / (tft.width() / 8);
       app_selected_row = (global_touch_y - 16) / (tft.height() / 10);
       //Serial.printf("app_selected_col %d, app_selected_row %d\n", app_selected_col, app_selected_row);
-      app_selected = app_selected_row * 8 + app_selected_col + 1;
+      //app_selected = app_selected_row * 8 + app_selected_col + 1;
     }
     if(global_touch_present_flag == 0 || global_touch_y < 16) {
       app_selected_row = -1;
@@ -1303,6 +1303,7 @@ void launcher(char mode, char *io_buff) {
 
         redraw_flag = 0;
         if(col == app_selected_col && row == app_selected_row) {
+          app_selected = app_index - 1;
           app_fg = color_scheme_selection_fg;
           app_bg = color_scheme_selection_bg;
           if(global_touch_present_flag) {
@@ -20250,8 +20251,8 @@ void chat(char mode, char *io_buff) {
   write_file_from_buff(CHAT_NICKNAME_FILE, nickname);
   tft.fillRect(0, 16, tft.width(), tft.height() - 16, color_scheme_bg);
   
-  messages = (char *)malloc(5000 * sizeof(char));
-  prev_messages = (char *)malloc(5000 * sizeof(char));
+  messages = (char *)malloc(5010 * sizeof(char));
+  prev_messages = (char *)malloc(5010 * sizeof(char));
 
   messages[0] = 0;
   prev_messages[0] = 0;
@@ -20452,7 +20453,7 @@ void chat_ai(char mode, char *io_buff) {
 
   strcpy(message, "");
   
-  messages = (char *)malloc(5000 * sizeof(char));
+  messages = (char *)malloc(5010 * sizeof(char));
   
   messages[0] = 0;
 
@@ -20461,7 +20462,7 @@ void chat_ai(char mode, char *io_buff) {
     if(update_flag) {
       sprintf(buff, "https://arikado.xyz/cyd/chat_ai.php?token=%s", ai_token);
       while(1) {
-        result = get_file_https(buff, messages, 4999);
+        result = get_file_https(buff, messages, 5000);
         if(result == 200) {
           screen_line = 0;
           buff_offset = 0;
