@@ -231,9 +231,10 @@
   цветные значки в лаунчере
 2026-10-10 Исправлен значок 2048, значок info переделан, расписание выбран текущий день, переименование в utf8 в pim-приложениях, du
 2026-10-11 du в справку, Дефрагментация диска (заставка), L system правый край за экраном
-2026-10-12 Не показывать время до синхронизации или до установки пользователем, поддержка 12-часового формата везде, настройка 12/24,
+2026-10-13 Не показывать время до синхронизации или до установки пользователем, поддержка 12-часового формата везде, настройка 12/24,
   кнопка обновления случайного факта, доработка справки, автосохранение при правке, deg, degrad, deggrad, raddeg, radgrad, gradrad, graddeg,
   recpol, polrec
+2026-10-14 Чат с ИИ (только для себя), прокрутка в обычном чате, тренировка шахматных координат, шашечная доска
 
 - Цветные значки
 - новый обзор(ы)
@@ -258,11 +259,9 @@
 - Flightradar https://api.adsb.lol/docs
 - Настройка: не показывать значки статуса AFMSWT
 - Настройка: не показывать время
-- Настройка: не показывать время пока оно не синхронизировано
 - Bluetooth музыка и радио - похоже не хватает на это памяти
 - Шахматы (задачи)
 - Шахматы (игра с компьютером)
-- Шахматы тренировка координат
 - Бегающий динозавр (как в Chrome)
 - Арканоид
 - Судоку
@@ -314,7 +313,6 @@
 - Совет от ИИ - экран История/продолжить - чем занимался в каких приложениях, как задачи
 - Терминал переменные окружения
 - /Terminal/Environment
-- Чат - просмотр с прокруткой
 - Категории для PIM
 - Заставка Boids
 - Заставка DLA
@@ -1011,7 +1009,7 @@ int global_moon_day = 0;
 int global_day_of_week = 0;
 char global_is_lap_year = 0;
 char global_is_time_set = 0;
-char global_is_12h_time = 1;
+char global_is_12h_time = 0;
 
 Ticker secondTicker;
 Ticker minuteTicker;
@@ -1114,6 +1112,7 @@ void wikipedia(char mode, char *io_buff);
 void settings(char mode, char *io_buff);
 void search(char mode, char *io_buff);
 void random_app(char mode, char *io_buff);
+void chat_ai(char mode, char *io_buff);
 
 void time_and_date_group(char mode, char *io_buff);
 void games_group(char mode, char *io_buff);
@@ -1160,6 +1159,7 @@ function_application_pointer all_apps[] = {
   http_file_access,
   translate,
   wikipedia,
+  chat_ai,
 #endif
 #ifdef IS_BLE_ENABLED
   ble,
@@ -1202,6 +1202,27 @@ function_application_pointer all_apps[] = {
   NULL
 };
 
+char app_default_icon[] = {
+  16, 16,
+  0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 
+  0xF0, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x0F, 
+  0xF0, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0x0F, 
+  0xF0, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0x0F, 
+  0xF0, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0x0F, 
+  0xF0, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0x0F, 
+  0xF0, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0x0F, 
+  0xF0, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0x0F, 
+  0xF0, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0x0F, 
+  0xF0, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0x0F, 
+  0xF0, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0x0F, 
+  0xF0, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0x0F, 
+  0xF0, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0x0F, 
+  0xF0, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0x0F, 
+  0xF0, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x0F, 
+  0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 
+};
+
+
 // ====================================================
 // Лаунчер
 // ====================================================
@@ -1216,28 +1237,11 @@ void launcher(char mode, char *io_buff) {
   int app_fg;
   int app_bg;
 
-  char app_my_icon[] = {
-    16, 16,
-    0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 
-    0xF0, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x0F, 
-    0xF0, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0x0F, 
-    0xF0, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0x0F, 
-    0xF0, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0x0F, 
-    0xF0, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0x0F, 
-    0xF0, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0x0F, 
-    0xF0, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0x0F, 
-    0xF0, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0x0F, 
-    0xF0, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0x0F, 
-    0xF0, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0x0F, 
-    0xF0, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0x0F, 
-    0xF0, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0x0F, 
-    0xF0, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0x0F, 
-    0xF0, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x0F, 
-    0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 
-  };
+  char *app_my_icon = app_default_icon;
 
   int row, col;
   int i;
+  int app_index;
   char app_name[80];
   char app_icon[130]; // 128 байт цветной спрайт, 2 байта размер
   int apps_max = 0;
@@ -1282,11 +1286,18 @@ void launcher(char mode, char *io_buff) {
       app_selected = -1;
     }
     
+    app_index = 1;
     for(row = 0; row != 10; row++) {
       for(col = 0; col != 8; col++) {
-        if(row * 8 + col + 1 >= apps_max) {
+        if(app_index >= apps_max) {
           break;
         }
+        do {
+          all_apps[app_index](APP_MODE_RETURN_NAME_SHORT, app_name);
+          all_apps[app_index](APP_MODE_RETURN_ICON, app_icon);
+          app_index++;
+          if(app_index >= apps_max) break;
+        } while(strlen(app_name) == 0);
 
         //Serial.printf("app=%d\n", row * 8 + col + 1);
 
@@ -1310,8 +1321,6 @@ void launcher(char mode, char *io_buff) {
         }
         if(redraw_flag) {
           //Serial.printf("Free heap before app: %d\n", ESP.getFreeHeap());
-          all_apps[row * 8 + col + 1](APP_MODE_RETURN_NAME_SHORT, app_name);
-          all_apps[row * 8 + col + 1](APP_MODE_RETURN_ICON, app_icon);
           //Serial.printf("Free heap after app %s: %d\n", app_name, ESP.getFreeHeap());
           app_name[4] = 0;
           tft.setTextColor(app_fg, app_bg);
@@ -1319,7 +1328,7 @@ void launcher(char mode, char *io_buff) {
           icon16_from_bytes(7 + col * tft.width() / 8, 4 + 16 + row * 32, app_icon);
         }
       }
-      if(row * 8 + col + 1 >= apps_max) break;
+      
     }
     app_selected_prev_row = app_selected_row;
     app_selected_prev_col = app_selected_col;
@@ -5019,9 +5028,9 @@ void terminal_execute_single(char *str) {
     if(arg_count == 1) {
       // Чтение чата
       char *messages;
-      messages = (char *)malloc(2048 * sizeof(char));
+      messages = (char *)malloc(5000 * sizeof(char));
       if(messages) {
-        if(get_file_https("https://arikado.xyz/cyd/chat_data.txt", messages, 2048) == 200) {
+        if(get_file_https("https://arikado.xyz/cyd/chat_data.txt", messages, 5000) == 200) {
           i = 0;
           j = 0;
 
@@ -5189,6 +5198,9 @@ void terminal_execute_single(char *str) {
     }
     else if(strcmp(cmdline_params[1], "chat") == 0) {
       chat(APP_MODE_LAUNCH, NULL);
+    }
+    else if(strcmp(cmdline_params[1], "ai") == 0) {
+      chat_ai(APP_MODE_LAUNCH, NULL);
     }
     else if(strcmp(cmdline_params[1], "weather") == 0) {
       weather(APP_MODE_LAUNCH, NULL);
@@ -20162,7 +20174,7 @@ void chat(char mode, char *io_buff) {
   long prev_update_data_millis;
   int i;
   int screen_line;
-  int messages_offset;
+  int messages_offset, next_offset;
   int buff_offset;
   char buff[80];
   char nickname[80];
@@ -20171,6 +20183,7 @@ void chat(char mode, char *io_buff) {
   char *prev_messages = NULL;
   char update_flag;
   int httpResponseCode;
+  int messages_page;
   char *buttons[] = {
     "Send message",
     NULL
@@ -20237,48 +20250,27 @@ void chat(char mode, char *io_buff) {
   write_file_from_buff(CHAT_NICKNAME_FILE, nickname);
   tft.fillRect(0, 16, tft.width(), tft.height() - 16, color_scheme_bg);
   
-  messages = (char *)malloc(2048 * sizeof(char));
-  prev_messages = (char *)malloc(2048 * sizeof(char));
+  messages = (char *)malloc(5000 * sizeof(char));
+  prev_messages = (char *)malloc(5000 * sizeof(char));
 
   messages[0] = 0;
   prev_messages[0] = 0;
 
+  messages_offset = 0;
+  messages_page = 0;
+
   update_flag = 1;
   while(1) {
     if(update_flag) {
-      if(get_file_https("https://arikado.xyz/cyd/chat_data.txt", messages, 2048) == 200) {
+      if(get_file_https("https://arikado.xyz/cyd/chat_data.txt", messages, 5000) == 200) {
         // Если сообщения изменились - бибикнуть
         if(strlen(prev_messages) > 0 && strcmp(messages, prev_messages)) {
           beep_if_enabled();
+          messages_offset = 0;
+          messages_page = 0;
         }
         strcpy(prev_messages, messages);
-        screen_line = 0;
-        buff_offset = 0;
-        memset(buff, ' ', 40);
-        buff[40] = 0;
-        tft.setTextColor(color_scheme_fg, color_scheme_bg);
-        
-        for(messages_offset = 0; messages[messages_offset] != 0; messages_offset++) {
-          if((messages[messages_offset] == '\n' || messages[messages_offset] == '\r') || buff_offset >= 40) {
-            if(messages[messages_offset] == '\n' && messages[messages_offset + 1] == '\r') messages_offset++;
-            else if(messages[messages_offset] == '\r' && messages[messages_offset + 1] == '\n') messages_offset++;
-            tft.drawString(buff, 1, 20 + screen_line * 8, FONT_MONOSPACE);
-            screen_line++;
-            buff_offset = 0;
-            memset(buff, ' ', 40);
-            // Не терять последний символ в строке
-            if(messages[messages_offset] != '\n' && messages[messages_offset] != '\r') {
-              buff[buff_offset] = messages[messages_offset];
-              buff_offset++;
-            }
-            buff[buff_offset] = 0;
-            if(screen_line == 32) break;
-            continue;
-          }
-          buff[buff_offset] = messages[messages_offset];
-          buff_offset++;
-          //buff[buff_offset] = 0;
-        }
+        draw_text_formatted(messages + messages_offset, 1, 16, tft.width() - 2, 16, FONT_DEFAULT, 1);
       }
       prev_update_data_millis = millis();
       update_flag = 0;
@@ -20301,7 +20293,27 @@ void chat(char mode, char *io_buff) {
     if(touchCheckNowait() == 0 && update_flag) {
       continue;
     }
-    touchWaitPress();
+    
+    if(global_touch_present_flag && global_touch_y >= 16 && global_touch_y < 320 - 32) {
+      if(global_touch_x < tft.width() / 2 && messages_page > 0) {
+        messages_page--;
+      }
+      if(global_touch_x >= tft.width() / 2) {
+        messages_page++;
+      }
+      //Serial.println(messages_page);
+      messages_offset = 0;
+      for(i = 0; i < messages_page; i++) {
+        next_offset = draw_text_formatted(messages + messages_offset, 1, 16, tft.width() - 2, 16, FONT_DEFAULT, 0);
+        if(messages_offset + next_offset >= strlen(messages)) {
+          messages_page = i - 1;
+          break; 
+        }
+        messages_offset += next_offset;
+      }
+      //Serial.println(messages_page);
+      draw_text_formatted(messages + messages_offset, 1, 16, tft.width() - 2, 16, FONT_DEFAULT, 1);
+    }
 
     button_pressed = touchCheckMatrix(0, tft.height() - 32, tft.width(), 32, buttons, 1, 1);
     if(button_pressed != -1) {
@@ -20352,6 +20364,190 @@ int chat_send_message(char *nickname, char *message, char *response) {
   int httpResponseCode;
   query = (char *)malloc(1000 * sizeof(char));
   sprintf(query, "https://arikado.xyz/cyd/chat_post.php?nickname=%s&message=", nickname);
+  // URLencode message
+  for(i = 0; i < strlen(message); i++) {
+    sprintf(buff, "%%%02X", message[i]);
+    strcat(query, buff);
+  }
+  Serial.println(query);
+  httpResponseCode = get_file_https(query, response, 80);
+  free(query);
+  return httpResponseCode;
+}
+
+// ====================================================
+// Чат с ИИ
+// ====================================================
+
+void chat_ai(char mode, char *io_buff) {
+  int button_pressed;
+  int wifi_status;
+  long prev_update_data_millis;
+  int i;
+  int screen_line;
+  int messages_offset = 0;
+  int result;
+  int buff_offset;
+  char buff[80];
+  char message[80];
+  char ai_token[80];
+  char *messages = NULL;
+  int messages_page = 0;
+  int next_offset = 0;
+  char update_flag;
+  int httpResponseCode;
+  char *buttons[] = {
+    "Send message",
+    NULL
+  };
+  char app_icon[] = {
+    16, 16,
+    0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 
+    0xFF, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0xFF, 
+    0xF0, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0x0F, 
+    0xF0, 0xFF, 0x00, 0x00, 0xFF, 0x00, 0x0F, 0x0F, 
+    0xF0, 0xF0, 0xFF, 0xFF, 0x0F, 0xF0, 0xFF, 0x0F, 
+    0xF0, 0xF0, 0xFF, 0xFF, 0x0F, 0xF0, 0xFF, 0x0F, 
+    0xF0, 0xF0, 0xFF, 0xFF, 0x0F, 0xF0, 0xFF, 0x0F, 
+    0xF0, 0xF0, 0xFF, 0xFF, 0x0F, 0xF0, 0xFF, 0x0F, 
+    0xF0, 0xF0, 0x00, 0x00, 0x0F, 0xF0, 0xFF, 0x0F, 
+    0xF0, 0xF0, 0xFF, 0xFF, 0x0F, 0xF0, 0xFF, 0x0F, 
+    0xF0, 0xF0, 0xFF, 0xFF, 0x0F, 0x00, 0x0F, 0x0F, 
+    0xF0, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0x0F, 
+    0xFF, 0x00, 0x00, 0x00, 0xF0, 0x00, 0x00, 0xFF, 
+    0xFF, 0xFF, 0xFF, 0xF0, 0xF0, 0xFF, 0xFF, 0xFF, 
+    0xFF, 0xFF, 0xFF, 0x00, 0x0F, 0xFF, 0xFF, 0xFF, 
+    0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 
+  };
+
+  if(mode == APP_MODE_RETURN_NAME) {
+    strcpy(io_buff, "");
+    if(Storage && Storage->exists("/Settings/AI")) {
+      strcpy(io_buff, "AI");
+    }
+    return;
+  }
+  if(mode == APP_MODE_RETURN_NAME_SHORT) {
+    strcpy(io_buff, "");
+    if(Storage && Storage->exists("/Settings/AI")) {
+      strcpy(io_buff, "AI");
+    }
+    return;
+  }
+  if(mode == APP_MODE_RETURN_ICON) {
+    memcpy(io_buff, app_icon, 130);
+    return;
+  }
+
+  clearScreen();
+  drawAppTitle("AI");
+
+  wifi_status = WiFi.status();
+  if(wifi_status != WL_CONNECTED) {
+    drawError("Wi-Fi connection required");
+    return;
+  }
+
+  file_get_line_by_index("/Settings/AI", 0, ai_token, 80);
+
+  strcpy(message, "");
+  
+  messages = (char *)malloc(5000 * sizeof(char));
+  
+  messages[0] = 0;
+
+  update_flag = 1;
+  while(1) {
+    if(update_flag) {
+      sprintf(buff, "https://arikado.xyz/cyd/chat_ai.php?token=%s", ai_token);
+      while(1) {
+        result = get_file_https(buff, messages, 4999);
+        if(result == 200) {
+          screen_line = 0;
+          buff_offset = 0;
+          tft.setTextColor(color_scheme_fg, color_scheme_bg);
+          messages_page = 0;
+          break;
+        }
+        delay(1000);
+      }
+
+      draw_text_formatted(messages + messages_offset, 1, 16, tft.width() - 2, 19, FONT_DEFAULT, 1);
+      update_flag = 0;
+    }
+
+    drawButtonMatrix(0, tft.height() - 32, tft.width(), 32, buttons, 1, 1);
+
+    touchWaitPress();
+    if(global_touch_present_flag && global_touch_y >= 16 && global_touch_y < 320 - 32) {
+      if(global_touch_x < tft.width() / 2 && messages_page > 0) {
+        messages_page--;
+      }
+      if(global_touch_x >= tft.width() / 2) {
+        messages_page++;
+      }
+      //Serial.println(messages_page);
+      messages_offset = 0;
+      for(i = 0; i < messages_page; i++) {
+        next_offset = draw_text_formatted(messages + messages_offset, 1, 16, tft.width() - 2, 17, FONT_DEFAULT, 0);
+        if(messages_offset + next_offset >= strlen(messages)) {
+          messages_page = i - 1;
+          break; 
+        }
+        messages_offset += next_offset;
+      }
+      //Serial.println(messages_page);
+      draw_text_formatted(messages + messages_offset, 1, 16, tft.width() - 2, 17, FONT_DEFAULT, 1);
+    }
+
+    button_pressed = touchCheckMatrix(0, tft.height() - 32, tft.width(), 32, buttons, 1, 1);
+    if(button_pressed != -1) {
+      if(button_pressed == 0) {
+        drawPrompt("Message to send", message);
+        if(strlen(message) > 0) {
+          if(strlen(message) < 80) {
+            httpResponseCode = chat_ai_send_message(ai_token, message, buff);
+            if(httpResponseCode == 200) {
+              strcpy(message, "");
+            }
+            else {
+              if(httpResponseCode > 0) {
+                sprintf(buff, "HTTP code %s", httpResponseCode);
+              }
+              else {
+                http_get_error_text(httpResponseCode, buff);
+              }
+              drawError(buff);
+            }
+          }
+          else {
+            drawError("Message too long");
+          }
+        }
+        update_flag = 1;
+      }
+      tft.fillRect(0, 16, tft.width(), tft.height() - 16, color_scheme_bg);
+    }
+
+    touchWaitReleaseOrExit();
+    if(global_exit_flag) {
+      drawAppTitle("Exit");
+      touchWaitRelease();
+      free(messages);
+      touchExitActionReset();
+      return;
+    }
+    touchWaitRelease();
+  }
+}
+
+int chat_ai_send_message(char *ai_token, char *message, char *response) {
+  char *query;
+  char buff[10];
+  int i;
+  int httpResponseCode;
+  query = (char *)malloc(1000 * sizeof(char));
+  sprintf(query, "https://arikado.xyz/cyd/chat_ai.php?token=%s&message=", ai_token);
   // URLencode message
   for(i = 0; i < strlen(message); i++) {
     sprintf(buff, "%%%02X", message[i]);
@@ -24868,6 +25064,9 @@ void autorun(char mode, char *io_buff) {
   // Собираем список приложений
   for(app_index = 0; all_apps[app_index] != NULL; app_index++) {
     all_apps[app_index](APP_MODE_RETURN_NAME, buff);
+    // Без названия пропускаем
+    if(strlen(buff) == 0) continue;
+
     app_found = 0;
     for(i = 0; app_list[i] != NULL; i++) {
       if(strcmp(app_list[i], buff) == 0) {
@@ -25749,7 +25948,7 @@ void pim_app(char *title, char *path, function_conversion_pointer file_to_list_f
       for(j = 0; j < offset; j++) {
         for(i = j + 1; i < offset; i++) {
           if(strcmp(visible_list[i], visible_list[j]) < 0) {
-            Serial.printf("Excahnge %s and %s\n", visible_list[i], visible_list[j]);
+            //Serial.printf("Excahnge %s and %s\n", visible_list[i], visible_list[j]);
             tmp = visible_list[i];
             visible_list[i] = visible_list[j];
             visible_list[j] = tmp;
@@ -32708,12 +32907,11 @@ void minesweeper_draw_field(char *field, char draw_mines_flag) {
 #define CHESS_BOARD_CELLS_TOTAL (8 * 8)
 
 void chess(char mode, char *io_buff) {
-  char field[CHESS_BOARD_CELLS_TOTAL];
-  int button_pressed;
   int i;
   int x, y;
   int touch_x, touch_y;
   int x_select, y_select;
+  int button_pressed;
   long start_millis = 0;
   char won_flag = 0;
   char lose_flag = 0;
@@ -32722,6 +32920,12 @@ void chess(char mode, char *io_buff) {
   char field_changed_flag = 0;
   char buff[80];
   char tmp;
+  char *buttons[] = {
+    "Chessboard",
+    "Train coordinates",
+    "Checkers",
+    NULL
+  };
   char app_icon[] = {
     16, 16,
     0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 
@@ -32754,6 +32958,234 @@ void chess(char mode, char *io_buff) {
     memcpy(io_buff, app_icon, 130);
     return;
   }
+
+  clearScreen();
+  drawAppTitle("Chess");
+
+  while(1) {
+    drawButtonMatrix(0, 20, tft.width(), 32 * 9, buttons, 1, 9);
+    touchWaitPress();
+    button_pressed = touchCheckMatrix(0, 20, tft.width(), 32 * 9, buttons, 1, 9);
+    if(button_pressed != -1) {
+      if(button_pressed == 0) {
+        chess_chessboard();
+      }
+      if(button_pressed == 1) {
+        chess_coordinates();
+      }
+      if(button_pressed == 2) {
+        chess_checkers();
+      }
+
+      clearScreen();
+      drawAppTitle("Chess");
+    }
+
+    touchWaitReleaseOrExit();
+    if(global_exit_flag) {
+      drawAppTitle("Exit");
+      touchWaitRelease();
+      touchExitActionReset();
+      return;
+    }
+    touchWaitRelease();
+  }
+}
+
+// Шашки
+void chess_checkers() {
+  char field[CHESS_BOARD_CELLS_TOTAL];
+  char field_changed_flag;
+  char new_guess_flag;
+  char buff[80];
+  int x, y;
+  int x_select, y_select;
+  int x_cycle, y_cycle;
+  int i;
+
+  clearScreen();
+  drawAppTitle("Checkers");
+
+  for(i = 0; i < CHESS_BOARD_CELLS_TOTAL; i++) {
+    field[i] = 0;
+  }
+
+  // Ставим шашки
+  for(i = 0; i < 4; i++) {
+    field[1 + 2 * i] = 'c';
+    field[8 + 2 * i] = 'c';
+    field[17 + 2 * i] = 'c';
+    field[63 - (1 + 2 * i)] = 'C';
+    field[63 - (8 + 2 * i)] = 'C';
+    field[63 - (17 + 2 * i)] = 'C';
+  }
+
+  field_changed_flag = 1;
+  new_guess_flag = 1;
+  x_select = -1;
+  y_select = -1;
+
+  while(1) {
+    // Показываем поле
+    if(field_changed_flag) {
+      chess_draw_field(field);
+      field_changed_flag = 0;
+    }
+
+    //drawTextBar(buff, 0, 16, tft.width(), tft.fontHeight(FONT_BIG) + 4, color_scheme_fg, color_scheme_bg, FONT_BIG);
+
+    if(touchCheckNowait() == 0) {
+      continue;
+    }
+
+    // Ждём нажатий
+    //touchWaitPress();
+    if(global_touch_present_flag == 1 && global_touch_y >= 48) {
+      x = global_touch_x / CHESS_BOARD_CELL_SIZE;
+      y = (global_touch_y - 48) / CHESS_BOARD_CELL_SIZE;
+
+      if(x_select == -1 || y_select == -1) {
+        if(field[x + y * 8]) {
+          x_select = x;
+          y_select = y;
+          tft.drawRect(x * CHESS_BOARD_CELL_SIZE, 48 + y * CHESS_BOARD_CELL_SIZE, CHESS_BOARD_CELL_SIZE, CHESS_BOARD_CELL_SIZE, TFT_YELLOW);
+        }
+      }
+      else {
+        // Если на той же диагонали и поле пустое
+        if(abs(x - x_select) == abs(y - y_select) && field[x + y * 8] == 0) {
+          // Перемещаем шашку если лежат на одной диагонали
+          field[x + y * 8] = field[x_select + y_select * 8];
+          // Дамки
+          if(field[x + y * 8] == 'c' && y == 7) {
+            field[x + y * 8] = 's';
+          }
+          if(field[x + y * 8] == 'C' && y == 0) {
+            field[x + y * 8] = 'S';
+          }
+          // Зачищаем исходное поле
+          field[x_select + y_select * 8] = 0;
+          // Зачищаем промежуточные поля
+          x_cycle = min(x, x_select);
+          y_cycle = min(y, y_select);
+          for(y_cycle = 0; y_cycle < 8; y_cycle++) {
+            for(x_cycle = 0; x_cycle < 8; x_cycle++) {
+              // Диагональ совпадает и с клеткой выдения, и с финальной, а координаты находятся между
+              if(abs(x_cycle - x_select) == abs(y_cycle - y_select)
+                &&
+                abs(x - x_cycle) == abs(y - y_cycle)
+                &&
+                x_cycle > min(x, x_select) && x_cycle < max(x, x_select)
+                &&
+                y_cycle > min(y, y_select) && y_cycle < max(y, y_select)
+              ) {
+                field[x_cycle + y_cycle * 8] = 0;
+              }
+            }
+          }
+        }
+        x_select = -1;
+        y_select = -1;
+        field_changed_flag = 1;
+      }
+    }
+
+
+    touchWaitReleaseOrExit();
+    if(global_exit_flag) {
+      drawAppTitle("Exit");
+      touchWaitRelease();
+      touchExitActionReset();
+      return;
+    }
+    touchWaitRelease();
+  }
+}
+
+// Тренировка шахматных координат
+void chess_coordinates() {
+  char field[CHESS_BOARD_CELLS_TOTAL];
+  char field_changed_flag;
+  char new_guess_flag;
+  char buff[80];
+  int x, y;
+  int x_select, y_select;
+  int x_guess, y_guess;
+  int i;
+
+  clearScreen();
+  drawAppTitle("Chess Coordinates");
+
+  for(i = 0; i < CHESS_BOARD_CELLS_TOTAL; i++) {
+    field[i] = 0;
+  }
+
+  field_changed_flag = 1;
+  new_guess_flag = 1;
+
+  while(1) {
+    if(new_guess_flag) {
+      x_guess = random(0, 8);
+      y_guess = random(0, 8);
+      field_changed_flag = 1;
+      new_guess_flag = 0;
+    }
+    // Показываем поле
+    if(field_changed_flag) {
+      chess_draw_field(field);
+      field_changed_flag = 0;
+    }
+
+    sprintf(buff, "%c%d", 'a' + x_guess, y_guess + 1);
+    drawTextBar(buff, 0, 16, tft.width(), tft.fontHeight(FONT_BIG) + 4, color_scheme_fg, color_scheme_bg, FONT_BIG);
+
+    if(touchCheckNowait() == 0) {
+      continue;
+    }
+
+    // Ждём нажатий
+    //touchWaitPress();
+    if(global_touch_present_flag == 1 && global_touch_y >= 48) {
+      x = global_touch_x / CHESS_BOARD_CELL_SIZE;
+      y = (global_touch_y - 48) / CHESS_BOARD_CELL_SIZE;
+
+      if(x == x_guess && y == 7 - y_guess) {
+        tft.fillRect(x * CHESS_BOARD_CELL_SIZE, 48 + y * CHESS_BOARD_CELL_SIZE, CHESS_BOARD_CELL_SIZE, CHESS_BOARD_CELL_SIZE, TFT_GREEN);
+      }
+      else {
+        tft.fillRect(x * CHESS_BOARD_CELL_SIZE, 48 + y * CHESS_BOARD_CELL_SIZE, CHESS_BOARD_CELL_SIZE, CHESS_BOARD_CELL_SIZE, TFT_RED);
+        tft.fillRect(x_guess * CHESS_BOARD_CELL_SIZE, 48 + y_guess * CHESS_BOARD_CELL_SIZE, CHESS_BOARD_CELL_SIZE, CHESS_BOARD_CELL_SIZE, TFT_GREEN);
+      }
+      delay(1000);
+      new_guess_flag = 1;
+    }
+
+    touchWaitReleaseOrExit();
+    if(global_exit_flag) {
+      drawAppTitle("Exit");
+      touchWaitRelease();
+      touchExitActionReset();
+      return;
+    }
+    touchWaitRelease();
+  }
+}
+
+// Шахматная доска
+void chess_chessboard() {
+  char field[CHESS_BOARD_CELLS_TOTAL];
+  int i;
+  int x, y;
+  int touch_x, touch_y;
+  int x_select, y_select;
+  long start_millis = 0;
+  char won_flag = 0;
+  char lose_flag = 0;
+  char restart_flag = 0;
+  char init_field_flag = 0;
+  char field_changed_flag = 0;
+  char buff[80];
+  char tmp;
 
   clearScreen();
   drawAppTitle("Chessboard");
@@ -32966,6 +33398,44 @@ void chess_draw_field(char *field) {
     B00111111, B11111100,
     B01111111, B11111110
   };
+  char icon_check[] = {
+    16, 16,
+    B00001111, B11110000,
+    B00111111, B11111100,
+    B01111111, B11111110,
+    B01111111, B11111110,
+    B11111111, B11111111,
+    B11111111, B11111111,
+    B11111111, B11111111,
+    B11111111, B11111111,
+    B11111111, B11111111,
+    B11111111, B11111111,
+    B11111111, B11111111,
+    B11111111, B11111111,
+    B01111111, B11111110,
+    B01111111, B11111110,
+    B00111111, B11111100,
+    B00001111, B11110000,
+  };
+  char icon_check_super[] = {
+    16, 16,
+    B00001111, B11110000,
+    B00111111, B11111100,
+    B01111111, B11111110,
+    B01111111, B11111110,
+    B11111100, B00011111,
+    B11111011, B11111111,
+    B11111011, B11111111,
+    B11111100, B00111111,
+    B11111111, B11011111,
+    B11111111, B11011111,
+    B11111000, B00111111,
+    B11111111, B11111111,
+    B01111111, B11111110,
+    B01111111, B11111110,
+    B00111111, B11111100,
+    B00001111, B11110000,
+  };
 
   for(y = 0; y < 8; y++) {
     for(x = 0; x < 8; x++) {
@@ -32992,6 +33462,8 @@ void chess_draw_field(char *field) {
       if(field[x + y * 8] == 'B' || field[x + y * 8] == 'b') icon = icon_bishop;
       if(field[x + y * 8] == 'Q' || field[x + y * 8] == 'q') icon = icon_queen;
       if(field[x + y * 8] == 'K' || field[x + y * 8] == 'k') icon = icon_king;
+      if(field[x + y * 8] == 'C' || field[x + y * 8] == 'c') icon = icon_check;
+      if(field[x + y * 8] == 'S' || field[x + y * 8] == 's') icon = icon_check_super;
       image_from_bits(x * CHESS_BOARD_CELL_SIZE + CHESS_BOARD_CELL_SIZE / 2 - 8, 48 + y * CHESS_BOARD_CELL_SIZE + CHESS_BOARD_CELL_SIZE / 2 - 8, icon, fg, bg);
       //tft.drawCentreString(buff, x * CHESS_BOARD_CELL_SIZE + CHESS_BOARD_CELL_SIZE / 2, 48 + y * CHESS_BOARD_CELL_SIZE + CHESS_BOARD_CELL_SIZE / 2 - 8, FONT_DEFAULT);
     }
