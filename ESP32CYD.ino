@@ -432,7 +432,7 @@
 
 // Uncomment for Freenove FNK0103 with 3.5" 320x480 ST7796 resistive touch display (FNK0114N)
 // Requires TFT_eSPI/User_Setup_FNK0103_3.5inch.h as the TFT_eSPI User_Setup.h
-//#define FREENOVE_FNK0103_35
+#define FREENOVE_FNK0103_35
 
 #define IS_WIFI_ENABLED
 
@@ -656,20 +656,6 @@ TFTTouchscreen touchscreen;
 #else
 XPT2046_Bitbang touchscreen(XPT2046_MOSI, XPT2046_MISO, XPT2046_CLK, XPT2046_CS);
 #endif
-
-// Set rotation, on larger screens keep the app area 240x320 and centred
-void tftSetRotation(uint8_t rotation) {
-  tft.setRotation(rotation);
-#ifdef SCREEN_APP_WIDTH
-  int x0 = (tft.width() - SCREEN_APP_WIDTH) / 2;
-  int y0 = (tft.height() - SCREEN_APP_HEIGHT) / 2;
-  tft.fillRect(0, 0, tft.width(), y0, TFT_BLACK);
-  tft.fillRect(0, y0 + SCREEN_APP_HEIGHT, tft.width(), tft.height() - y0 - SCREEN_APP_HEIGHT, TFT_BLACK);
-  tft.fillRect(0, y0, x0, SCREEN_APP_HEIGHT, TFT_BLACK);
-  tft.fillRect(x0 + SCREEN_APP_WIDTH, y0, tft.width() - x0 - SCREEN_APP_WIDTH, SCREEN_APP_HEIGHT, TFT_BLACK);
-  tft.setViewport(x0, y0, SCREEN_APP_WIDTH, SCREEN_APP_HEIGHT);
-#endif
-}
 
 // Audio
 #define I2S_BCLK 26
@@ -1310,6 +1296,21 @@ char app_default_icon[] = {
   0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 
 };
 
+
+// Set rotation, on larger screens keep the app area 240x320 and centred
+// Kept below the typedefs, Arduino inserts auto-prototypes before the first function
+void tftSetRotation(uint8_t rotation) {
+  tft.setRotation(rotation);
+#ifdef SCREEN_APP_WIDTH
+  int x0 = (tft.width() - SCREEN_APP_WIDTH) / 2;
+  int y0 = (tft.height() - SCREEN_APP_HEIGHT) / 2;
+  tft.fillRect(0, 0, tft.width(), y0, TFT_BLACK);
+  tft.fillRect(0, y0 + SCREEN_APP_HEIGHT, tft.width(), tft.height() - y0 - SCREEN_APP_HEIGHT, TFT_BLACK);
+  tft.fillRect(0, y0, x0, SCREEN_APP_HEIGHT, TFT_BLACK);
+  tft.fillRect(x0 + SCREEN_APP_WIDTH, y0, tft.width() - x0 - SCREEN_APP_WIDTH, SCREEN_APP_HEIGHT, TFT_BLACK);
+  tft.setViewport(x0, y0, SCREEN_APP_WIDTH, SCREEN_APP_HEIGHT);
+#endif
+}
 
 // ====================================================
 // Лаунчер
