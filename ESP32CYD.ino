@@ -430,6 +430,10 @@
 
 #define ESP32_CYD_PDA
 
+// Uncomment for Freenove FNK0103 with 3.5" 320x480 ST7796 resistive touch display (FNK0114N)
+// Requires TFT_eSPI/User_Setup_FNK0103_3.5inch.h as the TFT_eSPI User_Setup.h
+//#define FREENOVE_FNK0103_35
+
 #define IS_WIFI_ENABLED
 
 #define PREFER_SD_IF_AVAILABLE
@@ -441,7 +445,13 @@
 // CYD
 #include <SPI.h>
 #include <TFT_eSPI.h>
+#ifdef FREENOVE_FNK0103_35
+  #if !defined(ST7796_DRIVER) || !defined(TOUCH_CS) || TFT_HEIGHT != 480
+    #error "FREENOVE_FNK0103_35: copy TFT_eSPI/User_Setup_FNK0103_3.5inch.h over the TFT_eSPI library User_Setup.h"
+  #endif
+#else
 #include <XPT2046_Bitbang.h>
+#endif
 
 // Filesystem for FFat and SD
 #include "FS.h"
@@ -560,6 +570,58 @@ WiFiClient *global_client = NULL;
 
 TFT_eSPI tft = TFT_eSPI();
 
+#ifdef FREENOVE_FNK0103_35
+// Freenove FNK0103 3.5" (ESP32-32E, ST7796 320x480)
+// Touch shares the display HSPI bus (T_CS 33), read via TFT_eSPI
+#define XPT2046_IRQ 36   // T_IRQ
+#define XPT2046_CS 33    // T_CS
+
+#define BACKLIGHT_LED_PIN 27
+#define LIGHT_SENSOR_PIN 34 // No light sensor, battery voltage via 1:2 divider
+#define BATTERY_ADC_PIN 34
+
+#define LED_RED 22
+#define LED_GREEN 16
+#define LED_BLUE 17
+
+#define I2C_SDA 32
+#define I2C_SCL 25
+
+#define BUZZER_PIN 26
+#define AUDIO_EN_PIN 4 // Amplifier shutdown, LOW = enabled
+
+// Apps are laid out for 240x320, shown centred on the 320x480 screen
+#define SCREEN_APP_WIDTH 240
+#define SCREEN_APP_HEIGHT 320
+
+#define TOUCH_Z_THRESHOLD 300
+
+struct TouchPoint {
+  int x;
+  int y;
+  int xRaw;
+  int yRaw;
+  int zRaw;
+};
+
+// Drop-in replacement for XPT2046_Bitbang, returns raw values only
+class TFTTouchscreen {
+public:
+  void begin() {}
+  TouchPoint getTouch() {
+    TouchPoint p = {0, 0, 0, 0, 0};
+    uint16_t x, y, z;
+    z = tft.getTouchRawZ();
+    if(z > TOUCH_Z_THRESHOLD) {
+      tft.getTouchRaw(&x, &y);
+      p.xRaw = x;
+      p.yRaw = y;
+      p.zRaw = z;
+    }
+    return p;
+  }
+};
+#else
 // Touchscreen pins
 #define XPT2046_IRQ 36   // T_IRQ
 #define XPT2046_MOSI 32  // T_DIN
@@ -578,6 +640,7 @@ TFT_eSPI tft = TFT_eSPI();
 #define I2C_SCL 22
 
 #define BUZZER_PIN 26
+#endif
 
 #define BOOT_BUTTON_PIN 0
 
@@ -588,7 +651,25 @@ TFT_eSPI tft = TFT_eSPI();
 #define SD_MOSI 23
 
 SPIClass sdSPI(VSPI);
+#ifdef FREENOVE_FNK0103_35
+TFTTouchscreen touchscreen;
+#else
 XPT2046_Bitbang touchscreen(XPT2046_MOSI, XPT2046_MISO, XPT2046_CLK, XPT2046_CS);
+#endif
+
+// Set rotation, on larger screens keep the app area 240x320 and centred
+void tftSetRotation(uint8_t rotation) {
+  tft.setRotation(rotation);
+#ifdef SCREEN_APP_WIDTH
+  int x0 = (tft.width() - SCREEN_APP_WIDTH) / 2;
+  int y0 = (tft.height() - SCREEN_APP_HEIGHT) / 2;
+  tft.fillRect(0, 0, tft.width(), y0, TFT_BLACK);
+  tft.fillRect(0, y0 + SCREEN_APP_HEIGHT, tft.width(), tft.height() - y0 - SCREEN_APP_HEIGHT, TFT_BLACK);
+  tft.fillRect(0, y0, x0, SCREEN_APP_HEIGHT, TFT_BLACK);
+  tft.fillRect(x0 + SCREEN_APP_WIDTH, y0, tft.width() - x0 - SCREEN_APP_WIDTH, SCREEN_APP_HEIGHT, TFT_BLACK);
+  tft.setViewport(x0, y0, SCREEN_APP_WIDTH, SCREEN_APP_HEIGHT);
+#endif
+}
 
 // Audio
 #define I2S_BCLK 26
@@ -1755,7 +1836,11 @@ void system_info(char mode, char *io_buff) {
     tft.drawString(buff, 2, 16 + i * 16, FONT_DEFAULT);
     i++;
 
+#ifdef BATTERY_ADC_PIN
+    sprintf(buff, "Battery: %.2f V    ", analogReadMilliVolts(BATTERY_ADC_PIN) * 2 / 1000.0);
+#else
     sprintf(buff, "Light sensor: %d    ", analogRead(LIGHT_SENSOR_PIN));
+#endif
     tft.drawString(buff, 2, 16 + i * 16, FONT_DEFAULT);
     i++;
 
@@ -18757,7 +18842,7 @@ void screen_settings(char mode, char *io_buff) {
         else {
           global_rotation = 1;
         }
-        tft.setRotation(global_rotation ? 0 : 2);
+        tftSetRotation(global_rotation ? 0 : 2);
         changes_flag = 1;
       }
       // Brightness
@@ -23180,7 +23265,7 @@ void dashboard_calendar(char mode, char *io_buff) {
         else {
           global_rotation = 1;
         }
-        tft.setRotation(global_rotation ? 0 : 2);
+        tftSetRotation(global_rotation ? 0 : 2);
       }
 
       //tft.drawCentreString(day_of_week_name[day_of_week], tft.width() / 2, 70, FONT_BIG);
@@ -23220,7 +23305,7 @@ void dashboard_calendar(char mode, char *io_buff) {
         else {
           global_rotation = 1;
         }
-        tft.setRotation(global_rotation ? 0 : 2);
+        tftSetRotation(global_rotation ? 0 : 2);
       }
 
       // Лунный день
@@ -35363,7 +35448,7 @@ int show_system_menu() {
   else if(selected == 2) {
     if(global_rotation) global_rotation = 0;
     else global_rotation = 1;
-    tft.setRotation(global_rotation ? 0 : 2);
+    tftSetRotation(global_rotation ? 0 : 2);
 
     // А теперь нужно повернуть картинку на экране
     rotate_screen_image();
@@ -37476,6 +37561,11 @@ void setup() {
   pinMode(LED_GREEN, OUTPUT);
   pinMode(LED_BLUE, OUTPUT);
 
+#ifdef AUDIO_EN_PIN
+  pinMode(AUDIO_EN_PIN, OUTPUT);
+  digitalWrite(AUDIO_EN_PIN, LOW);
+#endif
+
   pinMode(LIGHT_SENSOR_PIN, INPUT);
   pinMode(XPT2046_IRQ, INPUT);
 
@@ -37488,7 +37578,7 @@ void setup() {
   // Инициализация экрана, 
   tft.init();
   // Поворот
-  tft.setRotation(2);
+  tftSetRotation(2);
   // Без этого неправильно работает JPEGDEC/PNGDec
   tft.setSwapBytes(true);
   // Очистка
@@ -37648,10 +37738,10 @@ void setup() {
     // Поворот экрана
     if(read_file_to_buff("/Settings/Rotation", 79, buff)) {
       global_rotation = strtol(buff, NULL, 10);
-      tft.setRotation(global_rotation ? 0 : 2);
+      tftSetRotation(global_rotation ? 0 : 2);
     }
     else {
-      tft.setRotation(2);
+      tftSetRotation(2);
     }
 
     // Мелкий шрифт

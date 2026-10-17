@@ -35,6 +35,14 @@ PDA is Personal Digital Assistant. A small handheld computer, like a smartphone 
 
 Check instructions at https://randomnerdtutorials.com/cheap-yellow-display-esp32-2432s028r/ if you have troubles.
 
+# Freenove FNK0103 (3.5" 320x480 ST7796, resistive touch)
+* Uncomment `#define FREENOVE_FNK0103_35` near the top of ESP32CYD.ino
+* Copy TFT_eSPI/User_Setup_FNK0103_3.5inch.h over User_Setup.h in the TFT_eSPI library folder
+* XPT2046_Bitbang is not needed, touch is read through TFT_eSPI (shared SPI bus, T_CS 33)
+* Board Selection: ESP32 Dev Module, Partition Scheme "No OTA (2 MB APP / 2 MB FATFS)"
+* Apps are drawn in a 240x320 area centred on the screen, run touchscreen calibration on first start
+* Pin differences from CYD: backlight 27, red LED 22, I2C SDA 32 / SCL 25, amplifier enable 4, GPIO 34 is battery voltage (shown in System info) instead of light sensor
+
 # First run
 * Touchscreen calibration - calibration data stored in a /Settings/Calibration
 * Format internal storage as FFat when asked (or use SD with FAT32 filesystem)
