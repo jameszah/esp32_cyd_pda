@@ -1,15 +1,17 @@
 # Description
-This is PDA firmware for ESP32 Cheap Yellow Display. Inspired by Palm OS.
+Firmware for the ESP32 Cheap Yellow Display (CYD), inspired by Palm OS.
 
-PDA is Personal Digital Assistant. Small handheld computer. Like smartphone without phone functions.
+A small handheld computer that combines classic PDA functionality with modern features.
+
+PDA is Personal Digital Assistant. A small handheld computer, like a smartphone without phone functions.
 
 ![CYD PDA Screenshots](Collage.png)
 
 # Details
 * No additional hardware required. All you need is CYD (tested with ESP32-2432S028R)
-* But if you have a speaker it can beep on events.
+* If you have a speaker, the device can beep in response to events.
 * It uses internal flash for files storage. FFat as filesystem. You can do backups from FFat to SD.
-* Or you can use SD as storage. SD if preferred.
+* An SD card can also be used for storage.
 * You can add your own internal apps by modifying arduino code.
 
 # Installation via web flasher
@@ -24,18 +26,18 @@ PDA is Personal Digital Assistant. Small handheld computer. Like smartphone with
 # Installation via Arduino IDE
 * Install Arduino IDE
 * Install Required libraries (see above)
-* Replace User_Setup.h with a file from https://github.com/witnessmenow/ESP32-Cheap-Yellow-Display/blob/main/DisplayConfig/User_Setup.h
+* Download the appropriate User_Setup.h file from the ESP32 Cheap Yellow Display repository and replace the existing file with it: https://github.com/witnessmenow/ESP32-Cheap-Yellow-Display/blob/main/DisplayConfig/User_Setup.h
 * Add ESP32 libraries
 * Board Selection: In the Arduino IDE, go to Tools > Board and select ESP32-2432S028R
-* Set in Arduino IDE Tools - Partition scheme - No OTA (2 MP APP/2 MB FATFS)
+* In the Arduino IDE, go to Tools → Partition Scheme and select "No OTA (2 MB APP / 2 MB FATFS)."
 * Compile and upload
 * Done
 
 Check instructions at https://randomnerdtutorials.com/cheap-yellow-display-esp32-2432s028r/ if you have troubles.
 
 # First run
-* Calibrate sensor screen - calibration data stored in a /Settings/Calibration
-* Format internal storage as FFat when asked
+* Touchscreen calibration - calibration data stored in a /Settings/Calibration
+* Format internal storage as FFat when asked (or use SD with FAT32 filesystem)
 * Done
 
 # Usage
@@ -43,8 +45,8 @@ Check instructions at https://randomnerdtutorials.com/cheap-yellow-display-esp32
 * Touch and hold app title more than 1 second to exit app
 * Tap buttons in app to perform actions
 * For screensavers touch and hold anywhere to exit
-* To force perform calibration on start hold touchscreen during reboot
-* You can set password in Security app. Password asked when power on. Password stored in a plaintext, no encryption
+* To force calibration at startup hold touchscreen during reboot
+* You can set password in Security app. Password asked when power on. Password stored as SHA256 hash in NVS.
 * Tap top right corner for menu (brightness, inversion, rotation, silent mode, exit)
 
 # Status bar symbols
@@ -53,7 +55,7 @@ Check instructions at https://randomnerdtutorials.com/cheap-yellow-display-esp32
 * Clock with dots - waiting for sync with NTP
 * SD card - main storage is SD
 * Chip - main storage is FFat (internal storage)
-* Note - music playing in progress
+* Note - music is playing
 
 # Applications/Functions
 * File management (with viewing text, JPEG, PNG and editing text support)
@@ -69,7 +71,7 @@ Check instructions at https://randomnerdtutorials.com/cheap-yellow-display-esp32
 * Life (cellular automaton) - see https://en.wikipedia.org/wiki/Conway%27s_Game_of_Life for details
 * Counter
 * I2C Scanner
-* Make screenshot with BOOT button
+* Take a screenshot by pressing the BOOT button
 * User's manual application
 * Terminal (with serial, ping, telnet)
 * Backup via web interface (very slow, ~40 minutes for download, upload is pretty fast)
@@ -84,7 +86,7 @@ Check instructions at https://randomnerdtutorials.com/cheap-yellow-display-esp32
 ## PIM apps
 * Calculator
 * Notes
-* Books reader
+* Book reader
 * Contacts
 * Todo
 * Expenses
@@ -94,7 +96,7 @@ Check instructions at https://randomnerdtutorials.com/cheap-yellow-display-esp32
 * Flashcards
 * Table editor (data stored in CSV format)
 * TOTP (like Google Authenticator)
-* Basic interpeter - advanced calculations
+* Basic interpreter - advanced calculations
 * Barcode - linear barcode generator (EAN8, EAN13, Code128)
 
 ## Games
@@ -121,7 +123,7 @@ Check instructions at https://randomnerdtutorials.com/cheap-yellow-display-esp32
 * Unix Time - shows unix time
 * Internet Time - shows @beats time
 * Analog Time - shows analog clock
-* Weather - show current weather
+* Weather - shows the current weather
 * Network - ping different continents
 * Wi-Fi Channels Monitor - monitor Wi-Fi channels usage
 * World Time - time in different cities
@@ -185,7 +187,7 @@ Date and time:
 * sun - sun information
 * moon - moon information
 * date_add {date|datetime} {interval} {unit} - add interval to date
-* date_sub {date|datetime} {interval} {unit} - substract interval from date
+* date_sub {date|datetime} {interval} {unit} - subtract interval from date
 * interval {from_date|from_datetime} [to_date|to_datetime] - interval between dates
 
 Terminal controls:
@@ -198,7 +200,7 @@ Terminal controls:
 * cowsay {text} - show text with a cow
 * caesar {text} - encode text with Caesar code
 * rot13 {text} - encode text with rot13
-* seq {start_number} {end_number} - sequental numbers
+* seq {start_number} {end_number} - sequential numbers
 * lscpu - show CPU information
 * uname - show firmware information
 * lsmem - show RAM information
@@ -244,7 +246,7 @@ Converters:
 
 Math and statistics:
 * bc {expression} - calculate expressions
-* gcd {number} {number} - greatest common divider
+* gcd {number} {number} - greatest common divisor
 * nod {number} {number} - same as gcd 
 * lcm {number} {number} - least common multiple
 * nok {number} {number} - same as lcm
@@ -262,10 +264,10 @@ Math and statistics:
 * rol {number} - rotate binary left
 * ror {number} - rotate binary right
 * clz {number} - count leading zeroes (in binary)
-* ctz {number} - count tailing zeroes (in binary)
+* ctz {number} - count trailing zeros (in binary)
 * popcount {number} - number of set bits (in binary)
 * parity {number} - is number of bits odd (in binary)
-* div {number1} {number2} - divide by module
+* div {number1} {number2} - integer part and remainder of division
 * permutation  {number} - permutations count
 * arrangement {of_n} {taken_k} - arrangements count
 * combination {of_n} {taken_k} - combinations count
@@ -284,7 +286,7 @@ File operations:
 * unshift {text} - unshift line to /Terminal/Stack
 * shift - shift line from /Terminal/Stack
 * cd [directory] - change directory
-* pwd - chow current directory
+* pwd - show current directory
 * ls [directory] - list files in current directory
 * du {directory} - calculate directory or file size
 * mkdir {directory} - create directory
@@ -302,15 +304,15 @@ File operations:
 * hexview {file_path} - view file in hex in GUI viewer
 * append {file} {line} [line] … - add lines to file
 * edit {file_path} - edit text file in GUI editor
-* csv {file_path} - edic CSV file in GUI editor
+* csv {file_path} - edit a CSV file in GUI editor
 * hexdump {file_path} - show file in hex (in console)
 * wc {file_path} - calculate chars, words, lines
 * crc {file_path} - calculate CRC checksum
-* md5sum {file_path} - calculate MD5 schecksum
+* md5sum {file_path} - calculate MD5 checksum
 * sha256sum {file_path} - calculate SHA256 checksum
 * brainfuck {file_path} - brainfuck interpreter
 * basic {file_path} - BASIC interpreter
-* touch {file_path} - crete empty file
+* touch {file_path} - crete an empty file
 * ffat_to_sd {ffat_filename} {sd_filename} - copy file from ffat to SD
 * sd_to_ffat {sd_filename} {ffat_filename} - copy file from SD to ffat
 * utf8_to_cp1251 {input_filename} {output_filename} - change file encoding from UTF-8 to cp1251
@@ -343,7 +345,7 @@ Networking:
 * gateway - current gateway
 * dns - current DNS
 * rssi - current RSSI
-* host - resovle host with DNS
+* host {hostname} - resolve a hostname using DNS
 * arp - show ARP
 * arpscan - scan subnet with ARP
 * ping {hostname} - ping host
@@ -353,7 +355,7 @@ Networking:
 * telnet {host} [port] - telnet client
 * telnets {host} [port] - telnet client with SSL
 * wget {URL} [filename] - download file
-* ipinfo {ip} - fhow ipinfo via ipinfo.io
+* ipinfo {ip} - show IP information via ipinfo.io
 * hamqsl - show hf propagation
 * bitcoin - show current bitcoin info
 * myextip - show current external IP
