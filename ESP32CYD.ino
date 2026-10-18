@@ -590,9 +590,10 @@ TFT_eSPI tft = TFT_eSPI();
 #define BUZZER_PIN 26
 #define AUDIO_EN_PIN 4 // Amplifier shutdown, LOW = enabled
 
-// Apps are laid out for 240x320, shown centred on the 320x480 screen
-#define SCREEN_APP_WIDTH 240
-#define SCREEN_APP_HEIGHT 320
+// Apps use the full 320x480 screen
+// Uncomment to show them in a 240x320 area centred on the screen instead, as on the CYD
+//#define SCREEN_APP_WIDTH 240
+//#define SCREEN_APP_HEIGHT 320
 
 #define TOUCH_Z_THRESHOLD 300
 
@@ -1017,9 +1018,22 @@ double global_ay = 19840 / global_d;
 double global_by = -1109440 / global_d;
 double global_cy = 325691200 / global_d;
 
-#define CALIBRATION_QUANT (240 / 6)
-#define CALIBRATION_POINTS_X (240 / CALIBRATION_QUANT + 1)
-#define CALIBRATION_POINTS_Y (320 / CALIBRATION_QUANT + 1)
+// Multipoint calibration grid covers the area apps draw in
+#if defined(FREENOVE_FNK0103_35) && !defined(SCREEN_APP_WIDTH)
+#define CALIBRATION_SCREEN_WIDTH TFT_WIDTH
+#define CALIBRATION_SCREEN_HEIGHT TFT_HEIGHT
+// Separate files, calibration made for the 240x320 area does not fit the full screen
+#define CALIBRATION_FILE "/Settings/Calibration_320x480"
+#define CALIBRATION_MULTIPOINT_FILE "/Settings/CalibrationMultipoint_320x480"
+#else
+#define CALIBRATION_SCREEN_WIDTH 240
+#define CALIBRATION_SCREEN_HEIGHT 320
+#define CALIBRATION_FILE "/Settings/Calibration"
+#define CALIBRATION_MULTIPOINT_FILE "/Settings/CalibrationMultipoint"
+#endif
+#define CALIBRATION_QUANT (CALIBRATION_SCREEN_WIDTH / 6)
+#define CALIBRATION_POINTS_X (CALIBRATION_SCREEN_WIDTH / CALIBRATION_QUANT + 1)
+#define CALIBRATION_POINTS_Y (CALIBRATION_SCREEN_HEIGHT / CALIBRATION_QUANT + 1)
 #define CALIBRATION_POINTS_TOTAL (CALIBRATION_POINTS_X * CALIBRATION_POINTS_Y)
 int calibration_x[CALIBRATION_POINTS_TOTAL];
 int calibration_y[CALIBRATION_POINTS_TOTAL];
@@ -1312,6 +1326,19 @@ void tftSetRotation(uint8_t rotation) {
 #endif
 }
 
+// Set width, height and sizes in a 118 byte 16 color BMP header
+void bmp_header_set_size(uint8_t *header, int width, int height) {
+  uint32_t image_size = width / 2 * height;
+  uint32_t file_size = 118 + image_size;
+  int i;
+  for(i = 0; i < 4; i++) {
+    header[2 + i] = (file_size >> (8 * i)) & 0xFF;
+    header[18 + i] = (width >> (8 * i)) & 0xFF;
+    header[22 + i] = (height >> (8 * i)) & 0xFF;
+    header[34 + i] = (image_size >> (8 * i)) & 0xFF;
+  }
+}
+
 // ====================================================
 // Лаунчер
 // ====================================================
@@ -1334,7 +1361,11 @@ void launcher(char mode, char *io_buff) {
   char app_name[80];
   char app_icon[130]; // 128 байт цветной спрайт, 2 байта размер
   int apps_max = 0;
-  
+  // Сетка 8x10, значок 30x32 по центру ячейки по горизонтали
+  int cell_width = tft.width() / 8;
+  int cell_height = tft.height() / 10;
+  int cell_dx = (cell_width - 30) / 2;
+
   if(mode == APP_MODE_RETURN_NAME) {
     strcpy(io_buff, "Launcher");
     return;
@@ -1364,8 +1395,8 @@ void launcher(char mode, char *io_buff) {
   while(1) {
     app_selected = -1;
     if(global_touch_y >= 16) {
-      app_selected_col = global_touch_x / (tft.width() / 8);
-      app_selected_row = (global_touch_y - 16) / (tft.height() / 10);
+      app_selected_col = global_touch_x / cell_width;
+      app_selected_row = (global_touch_y - 16) / cell_height;
       //Serial.printf("app_selected_col %d, app_selected_row %d\n", app_selected_col, app_selected_row);
       //app_selected = app_selected_row * 8 + app_selected_col + 1;
     }
@@ -1414,10 +1445,10 @@ void launcher(char mode, char *io_buff) {
           //Serial.printf("Free heap after app %s: %d\n", app_name, ESP.getFreeHeap());
           app_name[4] = 0;
           tft.setTextColor(app_fg, app_bg);
-          tft.drawCentreString(app_name, col * tft.width() / 8 + 15, 2 + 4 + 16 + 16 + row * 32, FONT_MONOSPACE);
-          icon16_from_bytes(7 + col * tft.width() / 8, 4 + 16 + row * 32, app_icon);
+          tft.drawCentreString(app_name, col * cell_width + cell_dx + 15, 2 + 4 + 16 + 16 + row * cell_height, FONT_MONOSPACE);
+          icon16_from_bytes(7 + col * cell_width + cell_dx, 4 + 16 + row * cell_height, app_icon);
           // Выделение вокруг значка
-          tft.drawRect(6 + col * tft.width() / 8, 3 + 16 + row * 32, 18, 18, app_bg);
+          tft.drawRect(6 + col * cell_width + cell_dx, 3 + 16 + row * cell_height, 18, 18, app_bg);
         }
       }
       
@@ -1526,10 +1557,10 @@ void calculator(char mode, char *io_buff) {
       tft.drawRightString(buff, tft.width() - 1, 16, FONT_DEFAULT);
     }
 
-    drawButtonMatrix(0, 80, tft.width(), 240, buttons, 5, 5);
+    drawButtonMatrix(0, 80, tft.width(), tft.height() - 80, buttons, 5, 5);
 
     touchWaitPress();
-    button_pressed = touchCheckMatrix(0, 80, tft.width(), 240, buttons, 5, 5);
+    button_pressed = touchCheckMatrix(0, 80, tft.width(), tft.height() - 80, buttons, 5, 5);
     if(button_pressed != -1) {
       if(!error_flag) {
         // MC
@@ -2383,7 +2414,7 @@ void files(char mode, char *io_buff) {
       clearScreen();
       drawAppTitle("Files");
 
-      drawButtonMatrix(0, tft.width(), 240, 80, file_operations, 4, 2);
+      drawButtonMatrix(0, tft.height() - 80, tft.width(), 80, file_operations, 4, 2);
 
       redraw_required = 0;
     }
@@ -2492,21 +2523,21 @@ void files(char mode, char *io_buff) {
     // Сначала проверить нажатия, потом нарисовать, так нажатие сработает сразу
     prev_file_selected = file_selected;
     prev_file_offset = file_offset;
-    touchCheckList(0, 40, 240, 192, files, 12, &file_offset, &file_selected);
-    drawList(0, 40, 240, 192, files, 12, &file_offset, &file_selected);
+    touchCheckList(0, 40, tft.width(), tft.height() - 128, files, (tft.height() - 128) / 16, &file_offset, &file_selected);
+    drawList(0, 40, tft.width(), tft.height() - 128, files, (tft.height() - 128) / 16, &file_offset, &file_selected);
 
-    drawButtonMatrix(0, 240, tft.width(), 80, file_operations, 4, 2);
+    drawButtonMatrix(0, tft.height() - 80, tft.width(), 80, file_operations, 4, 2);
 
     touchWaitPress();
     current_op = -1;
-    if(touchCheckList(0, 40, 240, 192, files, 12, &file_offset, &file_selected) != -1) {
+    if(touchCheckList(0, 40, tft.width(), tft.height() - 128, files, (tft.height() - 128) / 16, &file_offset, &file_selected) != -1) {
       if(prev_file_selected == file_selected && prev_file_offset == file_offset) {
         current_op = 1; 
       }
     }
     else {
     // Операции
-      current_op = touchCheckMatrix(0, 240, tft.width(), 80, file_operations, 4, 2);
+      current_op = touchCheckMatrix(0, tft.height() - 80, tft.width(), 80, file_operations, 4, 2);
     }
 
     if(current_op != -1) {
@@ -6613,7 +6644,7 @@ int terminal_input_char() {
           drawButtonSingle(indent_left + i * (tft.width() - indent_width) / 6, 176, (tft.width() - indent_width) / 6, 24, control_buttons[i], button_bg, color_scheme_button_fg);
         }
       }
-      drawButtonMatrix(indent_left, 200, tft.width() - indent_width, 120, keyboard_current, 12, 4);
+      drawButtonMatrix(indent_left, tft.height() - 120, tft.width() - indent_width, 120, keyboard_current, 12, 4);
       terminal_keyboard_redraw_flag = 0;
     }
 
@@ -6713,7 +6744,7 @@ int terminal_input_char() {
       terminal_keyboard_redraw_flag = 1;
     }
 
-    button = touchCheckMatrix(indent_left, 200, tft.width() - indent_width, 120, keyboard_current, 12, 4);
+    button = touchCheckMatrix(indent_left, tft.height() - 120, tft.width() - indent_width, 120, keyboard_current, 12, 4);
     if(button != -1) {
       if(button == 11) {
         return 0x08;
@@ -12975,6 +13006,9 @@ void draw_edit(char *title, char *filename) {
   char byte;
   int pixel_color;
   char modified = 0;
+  // Палитра внизу экрана, холст между заголовком и палитрой
+  int palette_y = tft.height() - 16;
+  int canvas_height = palette_y - 16;
 
   clearScreen();
 
@@ -12988,10 +13022,10 @@ void draw_edit(char *title, char *filename) {
   drawAppTitle(title);
 
   for(color_index = 0; color_index < 16; color_index++) {
-    tft.fillRect(color_index * tft.width() / 16, 304, tft.width() / 16, 16, colors[color_index]);
+    tft.fillRect(color_index * tft.width() / 16, palette_y, tft.width() / 16, 16, colors[color_index]);
   }
   color_index = 0;
-  tft.fillRect(color_index * tft.width() / 16 + 7 - brush_width / 2, 304 + 7 - brush_width / 2, brush_width, brush_width, colors[15 - color_index]);
+  tft.fillRect(color_index * tft.width() / 16 + 7 - brush_width / 2, palette_y + 7 - brush_width / 2, brush_width, brush_width, colors[15 - color_index]);
 
   color = TFT_BLACK;
   while(1) {
@@ -13000,7 +13034,7 @@ void draw_edit(char *title, char *filename) {
       touch_x = global_touch_x;
       touch_y = global_touch_y;
       //Serial.printf("Draw x = %d y = %d\n", touch_x, touch_y);
-      if(touch_x >= 0 && touch_x < tft.width() && touch_y >= 16 && touch_y < 304) {
+      if(touch_x >= 0 && touch_x < tft.width() && touch_y >= 16 && touch_y < palette_y) {
         // Если линия движется медленно, рисовать линию
         // Нужно для избегания рывков линии при подъёме стилуса
         if(touch_started) {
@@ -13023,8 +13057,8 @@ void draw_edit(char *title, char *filename) {
       }
       prev_touch_x = touch_x;
       prev_touch_y = touch_y;
-      if(touch_x >= 0 && touch_x < tft.width() && touch_y >= 304 && touch_y < tft.height()) {
-        tft.fillRect(color_index * tft.width() / 16, 304, tft.width() / 16, 16, colors[color_index]);
+      if(touch_x >= 0 && touch_x < tft.width() && touch_y >= palette_y && touch_y < tft.height()) {
+        tft.fillRect(color_index * tft.width() / 16, palette_y, tft.width() / 16, 16, colors[color_index]);
         if(color_index != floor(touch_x * 16 / tft.width())) {
           brush_width = 3;
         }
@@ -13035,8 +13069,8 @@ void draw_edit(char *title, char *filename) {
           }
         }
         color_index = floor(touch_x * 16 / tft.width());
-        tft.fillRect(color_index * tft.width() / 16, 304, tft.width() / 16, 16, colors[color_index]);
-        tft.fillRect(color_index * tft.width() / 16 + 7 - brush_width / 2, 304 + 7 - brush_width / 2, brush_width, brush_width, colors[15 - color_index]);
+        tft.fillRect(color_index * tft.width() / 16, palette_y, tft.width() / 16, 16, colors[color_index]);
+        tft.fillRect(color_index * tft.width() / 16 + 7 - brush_width / 2, palette_y + 7 - brush_width / 2, brush_width, brush_width, colors[15 - color_index]);
 
         touchWaitRelease();
       }
@@ -13048,13 +13082,14 @@ void draw_edit(char *title, char *filename) {
         if(modified) {
           drawAppTitle("Saving...");
           file = Storage->open(filename, FILE_WRITE);
+          bmp_header_set_size((uint8_t *)draw_header, tft.width(), canvas_height);
           file.write((const uint8_t *)draw_header, 118);
           // Записываем данные изображения с экрана
           x = 0;
-          y = 288;
+          y = canvas_height;
           while(y >= 0) {
-            // Половина ширины картинки (120) должна без остатка делиться на размер буфера
-            for(i = 0; i < 60; i++) {
+            // Половина ширины картинки (120 или 160) должна без остатка делиться на размер буфера
+            for(i = 0; i < 40; i++) {
               byte = 0;
               pixel_color = tft.readPixel(x, y + 16 - 1);
               color_index = color_read_to_index(pixel_color);
@@ -13067,10 +13102,10 @@ void draw_edit(char *title, char *filename) {
               //file.write(byte);
               buff[i] = byte;
             }
-            file.write((const uint8_t *)buff, 60);
+            file.write((const uint8_t *)buff, 40);
             //file.flush();
             if(x >= tft.width()) {
-              sprintf(buff, "Saving... (%d/288)", 288 - y);
+              sprintf(buff, "Saving... (%d/%d)", canvas_height - y, canvas_height);
               drawAppTitle(buff);
               x = 0;
               y--;
@@ -13380,12 +13415,12 @@ void search(char mode, char *io_buff) {
     touchCheckList(0, 16 + 4, tft.width(), 16 * 16, files, 16, &file_offset, &file_selected);
     drawList(0, 16 + 4, tft.width(), 16 * 16, files, 16, &file_offset, &file_selected);
 
-    drawButtonMatrix(0, 280, tft.width(), 40, buttons, 3, 1);
+    drawButtonMatrix(0, tft.height() - 40, tft.width(), 40, buttons, 3, 1);
 
     touchWaitPress();
 
     touchCheckList(0, 16 + 4, tft.width(), 16 * 16, files, 16, &file_offset, &file_selected);
-    button_pressed = touchCheckMatrix(0, 280, tft.width(), 40, buttons, 3, 1);
+    button_pressed = touchCheckMatrix(0, tft.height() - 40, tft.width(), 40, buttons, 3, 1);
     if(button_pressed != -1) {
       if(button_pressed == 0) {
         if(drawPrompt("Search", query) == 0) {
@@ -14718,7 +14753,7 @@ void timer(char mode, char *io_buff) {
     else {
       tft.drawCentreString(" off ", 3 * tft.width() / 4, 196, FONT_DEFAULT);
     }
-    drawButtonMatrix(0, 240, tft.width(), tft.height() - 240, buttons_presets, 2, 2);
+    drawButtonMatrix(0, tft.height() - 80, tft.width(), 80, buttons_presets, 2, 2);
 
     if(redraw_flag) {
       redraw_flag = 0;
@@ -14801,7 +14836,7 @@ void timer(char mode, char *io_buff) {
       redraw_flag = 1;
     }
 
-    button_pressed = touchCheckMatrix(0, 240, tft.width(), tft.height() - 240, buttons_presets, 2, 2);
+    button_pressed = touchCheckMatrix(0, tft.height() - 80, tft.width(), 80, buttons_presets, 2, 2);
     if(button_pressed != -1) {
       if(button_pressed == 0) {
         preset_minutes = 1;
@@ -14939,7 +14974,7 @@ void stopwatch(char mode, char *io_buff) {
     }
 
     drawButtonMatrix(0, 52, tft.width(), 64, buttons_control, 4, 1);
-    drawButtonMatrix(0, 288, tft.width(), 32, buttons_lap_control, 2, 1);
+    drawButtonMatrix(0, tft.height() - 32, tft.width(), 32, buttons_lap_control, 2, 1);
 
     tft.setTextColor(color_scheme_fg, color_scheme_bg);
 
@@ -15004,7 +15039,7 @@ void stopwatch(char mode, char *io_buff) {
       redraw_flag = 1;
     }
 
-    button_pressed = touchCheckMatrix(0, 288, tft.width(), 32, buttons_lap_control, 2, 1);
+    button_pressed = touchCheckMatrix(0, tft.height() - 32, tft.width(), 32, buttons_lap_control, 2, 1);
     if(button_pressed != -1) {
       // Delete one
       if(button_pressed == 0) {
@@ -15207,7 +15242,7 @@ void breathe(char mode, char *io_buff) {
     }
 
     drawButtonMatrix(0, 150, tft.width(), 64, buttons_controls, 3, 1);
-    drawButtonMatrix(0, 280, tft.width(), tft.height() - 280, buttons_presets, 3, 1);
+    drawButtonMatrix(0, tft.height() - 40, tft.width(), 40, buttons_presets, 3, 1);
 
     if(redraw_flag) {
       redraw_flag = 0;
@@ -15237,7 +15272,7 @@ void breathe(char mode, char *io_buff) {
       redraw_flag = 1;
     }
 
-    button_pressed = touchCheckMatrix(0, 280, tft.width(), tft.height() - 280, buttons_presets, 3, 1);
+    button_pressed = touchCheckMatrix(0, tft.height() - 40, tft.width(), 40, buttons_presets, 3, 1);
     if(button_pressed != -1) {
       if(button_pressed == 0) {
         inhale = 4;
@@ -15351,12 +15386,12 @@ void life(char mode, char *io_buff) {
     touchCheckList(0, 32, tft.width(), tft.height() - 72, rules_list, 15, &source_offset, &source_selected);
     drawList(0, 32, tft.width(), tft.height() - 72, rules_list, 15, &source_offset, &source_selected);
 
-    drawButtonMatrix(0, 280, tft.width(), tft.height() - 280, buttons, 1, 1);
+    drawButtonMatrix(0, tft.height() - 40, tft.width(), 40, buttons, 1, 1);
     
     touchWaitPress();
     touchCheckList(0, 32, tft.width(), tft.height() - 32 - 40, rules_list, 15, &source_offset, &source_selected);
     
-    button_pressed = touchCheckMatrix(0, 280, tft.width(), tft.height() - 280, buttons, 1, 1);
+    button_pressed = touchCheckMatrix(0, tft.height() - 40, tft.width(), 40, buttons, 1, 1);
     if(button_pressed != -1) {
       life_show(rules_list[source_selected], source_selected, field);
 
@@ -15506,13 +15541,13 @@ void life_show(char *rule_name, int rule_index, char *field) {
       continue;
     }
 
-    drawButtonMatrix(0, 280, tft.width(), 40, buttons, 5, 1);
+    drawButtonMatrix(0, tft.height() - 40, tft.width(), 40, buttons, 5, 1);
 
     touchWaitPress();
     // Смотрим, нет ли попадания в поле
     touch_x = global_touch_x;
     touch_y = global_touch_y;
-    if(touch_y >= 17 && touch_y < 280) {
+    if(touch_y >= 17 && touch_y < tft.height() - 40) {
       x = touch_x / LIFE_CELL_PIXELS;
       y = (touch_y - 17) / LIFE_CELL_PIXELS;
       if(life_get_cell(x, y, field)) {
@@ -15523,7 +15558,7 @@ void life_show(char *rule_name, int rule_index, char *field) {
       }
     }
 
-    button_pressed = touchCheckMatrix(0, 280, tft.width(), 40, buttons, 5, 1);
+    button_pressed = touchCheckMatrix(0, tft.height() - 40, tft.width(), 40, buttons, 5, 1);
     if(button_pressed != -1) {
       // Start
       if(button_pressed == 0) {
@@ -15685,12 +15720,12 @@ void l_system(char mode, char *io_buff) {
     touchCheckList(0, 32, tft.width(), tft.height() - 72, rules_list, 15, &source_offset, &source_selected);
     drawList(0, 32, tft.width(), tft.height() - 72, rules_list, 15, &source_offset, &source_selected);
 
-    drawButtonMatrix(0, 280, tft.width(), tft.height() - 280, buttons, 1, 1);
+    drawButtonMatrix(0, tft.height() - 40, tft.width(), 40, buttons, 1, 1);
     
     touchWaitPress();
     touchCheckList(0, 32, tft.width(), tft.height() - 32 - 40, rules_list, 15, &source_offset, &source_selected);
     
-    button_pressed = touchCheckMatrix(0, 280, tft.width(), tft.height() - 280, buttons, 1, 1);
+    button_pressed = touchCheckMatrix(0, tft.height() - 40, tft.width(), 40, buttons, 1, 1);
     if(button_pressed != -1) {
       iterations = 6;
       angle = 60;
@@ -19314,12 +19349,12 @@ void wifi_select_network() {
     touchCheckList(0, 32, tft.width(), tft.height() - 72, networks, 15, &network_offset, &network_selected);
     drawList(0, 32, tft.width(), tft.height() - 72, networks, 15, &network_offset, &network_selected);
 
-    drawButtonMatrix(0, 280, tft.width(), tft.height() - 280, buttons, 2, 1);
+    drawButtonMatrix(0, tft.height() - 40, tft.width(), 40, buttons, 2, 1);
     
     touchWaitPress();
     touchCheckList(0, 32, tft.width(), tft.height() - 32 - 40, networks, 15, &network_offset, &network_selected);
 
-    button_pressed = touchCheckMatrix(0, 280, tft.width(), tft.height() - 280, buttons, 2, 1);
+    button_pressed = touchCheckMatrix(0, tft.height() - 40, tft.width(), 40, buttons, 2, 1);
     if(button_pressed != -1) {
       if(button_pressed == 0) {
         strcpy(password, "");
@@ -19424,14 +19459,14 @@ void wifi_network_info() {
       tft.drawString(buff, 8, screen_offset, FONT_DEFAULT);
       screen_offset += 16;
 
-      drawButtonMatrix(0, 280, tft.width(), tft.height() - 280, buttons, 3, 1);
+      drawButtonMatrix(0, tft.height() - 40, tft.width(), 40, buttons, 3, 1);
 
       prev_update_millis = millis();
     }
     if(!touchCheckNowait()) continue;
     touchWaitPress();
 
-    button_pressed = touchCheckMatrix(0, 280, tft.width(), tft.height() - 280, buttons, 3, 1);
+    button_pressed = touchCheckMatrix(0, tft.height() - 40, tft.width(), 40, buttons, 3, 1);
     if(button_pressed != -1) {
       // Ping
       if(button_pressed == 0) {
@@ -20451,7 +20486,7 @@ void chat(char mode, char *io_buff) {
       continue;
     }
     
-    if(global_touch_present_flag && global_touch_y >= 16 && global_touch_y < 320 - 32) {
+    if(global_touch_present_flag && global_touch_y >= 16 && global_touch_y < tft.height() - 32) {
       if(global_touch_x < tft.width() / 2 && messages_page > 0) {
         messages_page--;
       }
@@ -20636,7 +20671,7 @@ void chat_ai(char mode, char *io_buff) {
     drawButtonMatrix(0, tft.height() - 32, tft.width(), 32, buttons, 1, 1);
 
     touchWaitPress();
-    if(global_touch_present_flag && global_touch_y >= 16 && global_touch_y < 320 - 32) {
+    if(global_touch_present_flag && global_touch_y >= 16 && global_touch_y < tft.height() - 32) {
       if(global_touch_x < tft.width() / 2 && messages_page > 0) {
         messages_page--;
       }
@@ -22209,7 +22244,7 @@ int irc_input_char() {
 
     if(terminal_keyboard_redraw_flag) {
       drawButtonMatrix(indent_left, 176, tft.width() - indent_width, 24, control_buttons, 3, 1);
-      drawButtonMatrix(indent_left, 200, tft.width() - indent_width, 120, keyboard_current, 12, 4);
+      drawButtonMatrix(indent_left, tft.height() - 120, tft.width() - indent_width, 120, keyboard_current, 12, 4);
       terminal_keyboard_redraw_flag = 0;
     }
 
@@ -22232,7 +22267,7 @@ int irc_input_char() {
       }
     }
 
-    button = touchCheckMatrix(indent_left, 200, tft.width() - indent_width, 120, keyboard_current, 12, 4);
+    button = touchCheckMatrix(indent_left, tft.height() - 120, tft.width() - indent_width, 120, keyboard_current, 12, 4);
     if(button != -1) {
       terminal_keyboard_redraw_flag = 1;
       if(button == 11) {
@@ -22664,12 +22699,12 @@ void wikipedia_select_article(char *lang, char *query) {
       touchCheckList(0, 32, tft.width(), tft.height() - 72, list, 15, &offset, &selected);
       drawList(0, 32, tft.width(), tft.height() - 72, list, 15, &offset, &selected);
 
-      drawButtonMatrix(0, 280, tft.width(), tft.height() - 280, buttons, 1, 1);
+      drawButtonMatrix(0, tft.height() - 40, tft.width(), 40, buttons, 1, 1);
       
       touchWaitPress();
       touchCheckList(0, 32, tft.width(), tft.height() - 32 - 40, list, 15, &offset, &selected);
 
-      button_pressed = touchCheckMatrix(0, 280, tft.width(), tft.height() - 280, buttons, 1, 1);
+      button_pressed = touchCheckMatrix(0, tft.height() - 40, tft.width(), 40, buttons, 1, 1);
       if(button_pressed != -1) {
         if(button_pressed == 0) {
           wikipedia_show_artice(lang, list[selected]);
@@ -22853,12 +22888,12 @@ void ble(char mode, char *io_buff) {
     touchCheckList(0, 32, tft.width(), tft.height() - 72, networks, 15, &network_offset, &network_selected);
     drawList(0, 32, tft.width(), tft.height() - 72, networks, 15, &network_offset, &network_selected);
 
-    drawButtonMatrix(0, 280, tft.width(), tft.height() - 280, buttons, 2, 1);
+    drawButtonMatrix(0, tft.height() - 40, tft.width(), 40, buttons, 2, 1);
     
     touchWaitPress();
     touchCheckList(0, 32, tft.width(), tft.height() - 32 - 40, networks, 15, &network_offset, &network_selected);
 
-    button_pressed = touchCheckMatrix(0, 280, tft.width(), tft.height() - 280, buttons, 2, 1);
+    button_pressed = touchCheckMatrix(0, tft.height() - 40, tft.width(), 40, buttons, 2, 1);
     if(button_pressed != -1) {
       if(button_pressed == 0) {
       }
@@ -22976,12 +23011,12 @@ void i2c_scanner(char mode, char *io_buff) {
     touchCheckList(8, 32, tft.width() - 8 * 2, tft.height() - 72, devices, 15, &device_offset, &device_selected);
     drawList(8, 32, tft.width() - 8 * 2, tft.height() - 72, devices, 15, &device_offset, &device_selected);
 
-    drawButtonMatrix(0, 280, tft.width(), tft.height() - 280, buttons, 2, 1);
+    drawButtonMatrix(0, tft.height() - 40, tft.width(), 40, buttons, 2, 1);
     
     touchWaitPress();
     touchCheckList(8, 32, tft.width() - 8 * 2, tft.height() - 72, devices, 15, &device_offset, &device_selected);
 
-    button_pressed = touchCheckMatrix(0, 280, tft.width(), tft.height() - 280, buttons, 2, 1);
+    button_pressed = touchCheckMatrix(0, tft.height() - 40, tft.width(), 40, buttons, 2, 1);
     if(button_pressed != -1) {
       if(button_pressed == 0) {
         rescan_flag = 1;
@@ -25251,12 +25286,12 @@ void autorun(char mode, char *io_buff) {
     touchCheckList(0, 48, tft.width(), 16 * 14, app_list, 14, &app_offset, &app_selected);
     drawList(0, 48, tft.width(), 16 * 14, app_list, 14, &app_offset, &app_selected);
 
-    drawButtonMatrix(0, 280, tft.width(), tft.height() - 280, buttons, 3, 1);
+    drawButtonMatrix(0, tft.height() - 40, tft.width(), 40, buttons, 3, 1);
     
     touchWaitPress();
     touchCheckList(0, 48, tft.width(), 16 * 14, app_list, 14, &app_offset, &app_selected);
 
-    button_pressed = touchCheckMatrix(0, 280, tft.width(), tft.height() - 280, buttons, 3, 1);
+    button_pressed = touchCheckMatrix(0, tft.height() - 40, tft.width(), 40, buttons, 3, 1);
     if(button_pressed != -1) {
       if(button_pressed == 0) {
         write_file_from_buff("/Settings/Autorun", app_list[app_selected]);
@@ -26064,7 +26099,7 @@ void pim_app(char *title, char *path, function_conversion_pointer file_to_list_f
       // Тонкая полоска между заголовком и списком
       tft.fillRect(0, 16, tft.width(), 4, color_scheme_bg);
       // Кнопки
-      tft.fillRect(0, 276, tft.width(), tft.height() - 276, color_scheme_bg);
+      tft.fillRect(0, tft.height() - 44, tft.width(), 44, color_scheme_bg);
     
       //tft.fillRect(0, 16, tft.width(), tft.height() - 16, color_scheme_bg);
       offset = 0;
@@ -26123,12 +26158,12 @@ void pim_app(char *title, char *path, function_conversion_pointer file_to_list_f
     touchCheckList(0, 16 + 4, tft.width(), 16 * 16, visible_list, 16, &file_offset, &file_selected);
     drawList(0, 16 + 4, tft.width(), 16 * 16, visible_list, 16, &file_offset, &file_selected);
 
-    drawButtonMatrix(0, 280, tft.width(), 40, buttons, buttons_count, 1);
+    drawButtonMatrix(0, tft.height() - 40, tft.width(), 40, buttons, buttons_count, 1);
 
     touchWaitPress();
 
     touchCheckList(0, 16 + 4, tft.width(), 16 * 16, visible_list, 16, &file_offset, &file_selected);
-    button_pressed = touchCheckMatrix(0, 280, tft.width(), 40, buttons, buttons_count, 1);
+    button_pressed = touchCheckMatrix(0, tft.height() - 40, tft.width(), 40, buttons, buttons_count, 1);
     if(button_pressed != -1) {
       (*action_function)(button_pressed, files_list[file_selected]);
       update_list_flag = 1;
@@ -28909,7 +28944,7 @@ char edit_text(char *title, char *contents, long max_len) {
       }
     }
 
-    drawButtonMatrix(indent_left, 200, tft.width() - indent_width, 120, keyboard_current, 12, 4);
+    drawButtonMatrix(indent_left, tft.height() - 120, tft.width() - indent_width, 120, keyboard_current, 12, 4);
     
     while(touchCheckNowait() == 0) {
       // Автосохранение
@@ -28967,7 +29002,7 @@ char edit_text(char *title, char *contents, long max_len) {
     }
 
     //touchWaitPress();
-    button = touchCheckMatrix(indent_left, 200, tft.width() - indent_width, 120, keyboard_current, 12, 4);
+    button = touchCheckMatrix(indent_left, tft.height() - 120, tft.width() - indent_width, 120, keyboard_current, 12, 4);
     if(button != -1) {
       if(button == 11) {
         if(cursor_offset_bytes > 0) {
@@ -30006,7 +30041,7 @@ void touch_calibration_save() {
     Storage->mkdir("/Settings");
   }
 
-  file = Storage->open("/Settings/Calibration", FILE_WRITE);
+  file = Storage->open(CALIBRATION_FILE, FILE_WRITE);
   if(file) {
     sprintf(buff, "%f %f %f %f %f %f", global_ax, global_bx, global_cx, global_ay, global_by, global_cy);
     file.print(buff);
@@ -30020,7 +30055,7 @@ void touch_calibration_save_multipoint() {
   char buff[80];
   int i;
 
-  file = Storage->open("/Settings/CalibrationMultipoint", FILE_WRITE);
+  file = Storage->open(CALIBRATION_MULTIPOINT_FILE, FILE_WRITE);
   if(file) {
     for(i = 0; i < CALIBRATION_POINTS_TOTAL; i++) {
       sprintf(buff, "%d %d\n", calibration_x[i], calibration_y[i]);
@@ -30036,7 +30071,7 @@ void touch_calibration_load_multipoint() {
   char buff[80];
   int i;
 
-  file = Storage->open("/Settings/CalibrationMultipoint");
+  file = Storage->open(CALIBRATION_MULTIPOINT_FILE);
   if(file) {
     for(i = 0; i < CALIBRATION_POINTS_TOTAL; i++) {
       strcpy(buff, file.readStringUntil('\n').c_str());
@@ -30113,12 +30148,12 @@ void oscilloscope(char mode, char *io_buff) {
     touchCheckList(0, 32, tft.width(), tft.height() - 72, sources_list, 15, &source_offset, &source_selected);
     drawList(0, 32, tft.width(), tft.height() - 72, sources_list, 15, &source_offset, &source_selected);
 
-    drawButtonMatrix(0, 280, tft.width(), tft.height() - 280, buttons, 1, 1);
+    drawButtonMatrix(0, tft.height() - 40, tft.width(), 40, buttons, 1, 1);
     
     touchWaitPress();
     touchCheckList(0, 32, tft.width(), tft.height() - 32 - 40, sources_list, 15, &source_offset, &source_selected);
     
-    button_pressed = touchCheckMatrix(0, 280, tft.width(), tft.height() - 280, buttons, 1, 1);
+    button_pressed = touchCheckMatrix(0, tft.height() - 40, tft.width(), 40, buttons, 1, 1);
     if(button_pressed != -1) {
       oscilloscope_show(sources_list[source_selected], source_selected);
 
@@ -34500,14 +34535,15 @@ void saveScreenshot() {
 
   // Сохраняем скриншот
   file = Storage->open(filename, FILE_WRITE);
+  bmp_header_set_size(bmp_header, tft.width(), tft.height());
   file.write((const uint8_t *)bmp_header, 118);
 
   // Записываем данные изображения с экрана
   x = 0;
   y = tft.height() - 1;
   while(y >= 0) {
-    // Половина ширины картинки (120) должна без остатка делиться на размер буфера
-    for(i = 0; i < 60; i++) {
+    // Половина ширины картинки (120 или 160) должна без остатка делиться на размер буфера
+    for(i = 0; i < 40; i++) {
       byte = 0;
       pixel_color = tft.readPixel(x, y);
       color_index = color_read_to_index(pixel_color);
@@ -34526,8 +34562,8 @@ void saveScreenshot() {
       //file.write(byte);
       buff[i] = byte;
     }
-    
-    file.write((const uint8_t *)buff, 60);
+
+    file.write((const uint8_t *)buff, 40);
 
     if(x >= tft.width()) {
       // Мигаем светодиодом для индикации прогресса
@@ -34966,16 +35002,16 @@ void drawProcessWindow(char *message) {
 }
 
 void clearPopupWindow() {
-  tft.fillRect(0, 120, 240, 120, color_scheme_bg);
+  tft.fillRect(0, 120, tft.width(), 120, color_scheme_bg);
 }
 
 void drawPopupWindow(char *title, char *message, char **buttons) {
   // Рамка
   tft.drawRect(0, 120, tft.width(), 120, color_scheme_fg);
   // Белый фон
-  tft.fillRect(1, 121, 238, 118, color_scheme_bg);
+  tft.fillRect(1, 121, tft.width() - 2, 118, color_scheme_bg);
   // Фон заголовка
-  tft.fillRect(1, 121, 238, 16, color_scheme_title_bg);
+  tft.fillRect(1, 121, tft.width() - 2, 16, color_scheme_title_bg);
   // Заголовок
   tft.setTextColor(color_scheme_title_fg, color_scheme_title_bg);
   tft.drawString(title, 16, 121, FONT_DEFAULT);
@@ -37810,7 +37846,7 @@ void setup() {
     }
 
     // Калибровка сенсора, если нужно
-    if(read_file_to_buff("/Settings/Calibration", 79, buff)) {
+    if(read_file_to_buff(CALIBRATION_FILE, 79, buff)) {
       calibration_required = 0;
       global_ax = 0;
       sscanf(buff, "%lf %lf %lf %lf %lf %lf", &global_ax, &global_bx, &global_cx, &global_ay, &global_by, &global_cy);

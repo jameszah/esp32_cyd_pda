@@ -42,7 +42,7 @@ Check instructions at https://randomnerdtutorials.com/cheap-yellow-display-esp32
 * Also needed: TOTP library (Luca Dentella), PNGdec, JPEGDEC, ESP8266Audio
 * XPT2046_Bitbang is not needed, touch is read through TFT_eSPI (shared SPI bus, T_CS 33)
 * Board Selection: ESP32 Dev Module, Partition Scheme "No OTA (2 MB APP / 2 MB FATFS)"
-* Apps are drawn in a 240x320 area centred on the screen, run touchscreen calibration on first start
+* Apps use the full 320x480 screen (uncomment SCREEN_APP_WIDTH / SCREEN_APP_HEIGHT to get a centred 240x320 area instead), run touchscreen calibration on first start
 * Pin differences from CYD: backlight 27, red LED 22, I2C SDA 32 / SCL 25, amplifier enable 4, GPIO 34 is battery voltage (shown in System info) instead of light sensor
 
 # First run
